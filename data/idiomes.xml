@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<idiomes>
+    <cat>
+        <titol>RESCAT A PROXIMA CENTAURI</titol>
+        <iniciar>INICIAR</iniciar>
+        <config>CONFIGURACIO</config>
+    </cat>
+    <eng>
+        <titol>RESCUE AT PROXIMA CENTAURI</titol>
+        <iniciar>START GAME</iniciar>
+        <config>SETTINGS</config>
+    </eng>
+</idiomes>
