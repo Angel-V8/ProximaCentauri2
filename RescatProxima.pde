@@ -43,8 +43,8 @@ void setup() {
   llistaEnemics = new ArrayList<Enemic>();
   llistaMeteorits = new ArrayList<Meteorit>();
   llistaBoosters = new ArrayList<Booster>();
-  balesEnemigues = new ArrayList<Dispar>(); 
-  llistaMines = new ArrayList<Mina>();      
+  balesEnemigues = new ArrayList<Dispar>();
+  llistaMines = new ArrayList<Mina>();
 
   carregarNivell(numeroNivell);
 
@@ -90,7 +90,6 @@ void draw() {
     textAlign(CENTER, CENTER);
     textSize(60);
     text(textTitol, width/2, height/3 - 50);
-    
   } else if (estatJoc == 0) {
 
     contadorFramesNivell++;
@@ -123,7 +122,7 @@ void draw() {
     jugador.mostrar(this);
 
     // ==========================================
-    // 1. GESTIÓ PROJECTILS ENEMICS I MINES 
+    // 1. GESTIÓ PROJECTILS ENEMICS I MINES
     // ==========================================
     for (int i = balesEnemigues.size() - 1; i >= 0; i--) {
       Dispar d = balesEnemigues.get(i);
@@ -219,11 +218,9 @@ void draw() {
       if (jugador.colisionaAmb(b)) {
         if (b instanceof BoosterVida) {
           jugador.curar(25);
-        }
-        else if (b instanceof BoosterAtac) {
+        } else if (b instanceof BoosterAtac) {
           jugador.activarDobleDispar(600); // Actiu durant 10 segons (60 * 10)
-        }
-        else if (b instanceof BoosterEscut) {
+        } else if (b instanceof BoosterEscut) {
           jugador.afegirEscut();
         }
 
@@ -280,7 +277,7 @@ void draw() {
             marcador.incrementScore(100);
             llistaEnemics.remove(i);
           }
-          break; 
+          break;
         }
       }
 
@@ -289,7 +286,7 @@ void draw() {
         for (int i = llistaMeteorits.size() - 1; i >= 0; i--) {
           Meteorit m = llistaMeteorits.get(i);
           if (Utils.hiHaColisio(balaTeua.getPosicio(), balaTeua.getTamany(), m.getPosicio(), m.getTamany())) {
-            m.rebreDany(10); 
+            m.rebreDany(10);
             balaHaXocat = true;
             if (m.estaDestruit()) {
               marcador.incrementScore(20);
@@ -300,7 +297,7 @@ void draw() {
         }
       }
 
-      // 4.3 Contra Mines 
+      // 4.3 Contra Mines
       if (!balaHaXocat) {
         for (int i = llistaMines.size() - 1; i >= 0; i--) {
           Mina m = llistaMines.get(i);
@@ -316,14 +313,13 @@ void draw() {
         jugador.getDisparos().remove(j);
       }
     } // <--- FÍ DEL BUCLE DE LES BALES
-    
+
     // ==========================================
     // 5. COMPROVAR SI HEM MORT (Ara sí, fora del bucle de les bales!)
     // ==========================================
     if (jugador.getVida() <= 0) {
       estatJoc = 2; // Passem a la pantalla de Game Over
     }
-
   } else if (estatJoc == 1) {
     // ==========================================
     // ESTAT 1: TRANSICIÓ DE NIVELL REDISSENYADA
@@ -331,12 +327,12 @@ void draw() {
     nivellActual.dibuixarFons();
     fill(0, 0, 40, 210); // Fons blavós fosc i transparent per donar profunditat
     rect(0, 0, width, height);
-    
+
     fill(0, 255, 100); // Verd neó
     textAlign(CENTER, CENTER);
     textSize(60);
     text("NIVELL " + numeroNivell + " SUPERAT!", width/2, height/2 - 60);
-    
+
     fill(200, 200, 255);
     textSize(25);
     // Animació visual dels punts suspensius usant frameCount
@@ -345,7 +341,7 @@ void draw() {
     else if (frameCount % 60 > 30) punts = "..";
     else if (frameCount % 60 > 15) punts = ".";
     text("Preparant Nivell " + (numeroNivell + 1) + punts, width/2, height/2 + 20);
-    
+
     // Barra de progrés visual
     float progresCarga = constrain((millis() - tempsTransicio) / 3000.0f, 0, 1);
     fill(50);
@@ -358,7 +354,6 @@ void draw() {
       carregarNivell(numeroNivell);
       estatJoc = 0;
     }
-    
   } else if (estatJoc == 2) {
     // ==========================================
     // ESTAT 2: GAME OVER REDISSENYAT
@@ -387,19 +382,19 @@ void draw() {
 
 void generarEnemics() {
   if (intervalSpawn <= 0) return;
-  
+
   // Convertim l'interval (ms) a frames (assumint 60 FPS aprox)
   int framesInterval = (int)((intervalSpawn / 1000.0f) * 60);
   if (framesInterval <= 0) framesInterval = 60;
 
   if (contadorFramesNivell > 0 && contadorFramesNivell % framesInterval == 0) {
     int atzar = (int)random(0, 3);
-    
+
     // Ajustem la IA/Probabilitat segons el nivell i la narrativa
     if (numeroNivell == 3) atzar = (int)random(0, 2); // N.3: Kamikazes i Interceptors (sense miners)
     else if (numeroNivell == 6) {
       // N.6: Esquadró d'assalt ràpid (molts Kamikazes, algun Interceptor, zero miners)
-      atzar = random(1) < 0.6f ? 0 : 1; 
+      atzar = random(1) < 0.6f ? 0 : 1;
     }
 
     if (atzar == 0) llistaEnemics.add(new Kamikaze(jugador.getPosicio()));
@@ -412,7 +407,7 @@ void generarBoosters() {
   // Eix un Booster aleatori cada 10 segons
   if (contadorFramesNivell > 0 && contadorFramesNivell % 600 == 0) {
     int atzar = (int)random(0, 3);
-    
+
     if (atzar == 0) llistaBoosters.add(new BoosterVida());
     else if (atzar == 1) llistaBoosters.add(new BoosterAtac());
     else llistaBoosters.add(new BoosterEscut());
@@ -438,14 +433,14 @@ void keyPressed() {
 
   // Assegurem que l'espai funciona comprovant explícitament el keyCode 32
   if (key == ' ' || keyCode == 32 || key == 'x' || key == 'X') jugador.setDisparant(true);
-  
+
   // Si estem morts i polsem R, reiniciem el joc anant al menú
   if (estatJoc == 2 && (key == 'r' || key == 'R')) {
-      estatJoc = -1; 
-      cp5.show();    
-      
-      carregarConfiguracio();
-      jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
+    estatJoc = -1;
+    cp5.show();
+
+    carregarConfiguracio();
+    jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
   }
 }
 
@@ -462,8 +457,8 @@ void carregarNivell(int num) {
   llistaEnemics.clear();
   llistaMeteorits.clear();
   llistaBoosters.clear();
-  balesEnemigues.clear(); 
-  llistaMines.clear();    
+  balesEnemigues.clear();
+  llistaMines.clear();
   jugador.getDisparos().clear();
   contadorFramesNivell = 0;
 
@@ -541,3 +536,4 @@ public void desplegableIdioma(int n) {
   else if (n == 1) idiomaActual = "eng";
   aplicarIdioma();
 }
+
