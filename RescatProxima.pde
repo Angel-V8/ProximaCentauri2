@@ -169,11 +169,10 @@ void draw() {
         // L'explosió danya meteorits propers
         for (int j = llistaMeteorits.size() - 1; j >= 0; j--) {
           Meteorit met = llistaMeteorits.get(j);
-          if (Utils.hiHaColisio(met.getPosicio(), met.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
+          if (!met.isDestruint() && Utils.hiHaColisio(met.getPosicio(), met.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
             met.rebreDany(30);
             if (met.estaDestruit()) {
               marcador.incrementScore(20);
-              llistaMeteorits.remove(j);
             }
           }
         }
@@ -195,14 +194,13 @@ void draw() {
       m.actualitzar();
       m.mostrar(this);
 
-      if (m.getPosicio().x < -50) {
+      if (m.getPosicio().x < -50 || m.haAcabatExplosio()) {
         llistaMeteorits.remove(i);
         continue;
       }
-      if (jugador.colisionaAmb(m)) {
+      if (!m.isDestruint() && jugador.colisionaAmb(m)) {
         jugador.rebreDany(20);
-        m.rebreDany(100); // Es destrueix
-        if (m.estaDestruit()) llistaMeteorits.remove(i);
+        m.rebreDany(100); // Es destrueix (entra en estat de destrucció)
       }
     }
 
@@ -285,12 +283,11 @@ void draw() {
       if (!balaHaXocat) {
         for (int i = llistaMeteorits.size() - 1; i >= 0; i--) {
           Meteorit m = llistaMeteorits.get(i);
-          if (Utils.hiHaColisio(balaTeua.getPosicio(), balaTeua.getTamany(), m.getPosicio(), m.getTamany())) {
+          if (!m.isDestruint() && Utils.hiHaColisio(balaTeua.getPosicio(), balaTeua.getTamany(), m.getPosicio(), m.getTamany())) {
             m.rebreDany(10);
             balaHaXocat = true;
             if (m.estaDestruit()) {
               marcador.incrementScore(20);
-              llistaMeteorits.remove(i);
             }
             break;
           }

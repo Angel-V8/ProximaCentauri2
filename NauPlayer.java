@@ -162,6 +162,7 @@ public class NauPlayer implements Entitat {
       tam2 = e.getTamany();
     } else if (obj instanceof Meteorit) {
       Meteorit m = (Meteorit) obj;
+      if (m.isDestruint()) return false;
       pos2 = m.getPosicio();
       tam2 = m.getTamany();
     } else if (obj instanceof Mina) {
