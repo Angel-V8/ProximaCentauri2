@@ -48,7 +48,7 @@ public class Pantalla {
     app.rectMode(PApplet.CORNER);
     
     // 1. CAPA BASE: Imatge desplaçant-se o fixa segons el nivell
-    boolean fonsFix = (this.idNivell == 3 || this.idNivell == 7 || this.idNivell == 9);
+    boolean fonsFix = (this.idNivell == 3);
     
     if (fonsFix) {
       if (this.fons != null) {
