@@ -157,11 +157,10 @@ void draw() {
         // L'explosió danya enemics propers
         for (int j = llistaEnemics.size() - 1; j >= 0; j--) {
           Enemic e = llistaEnemics.get(j);
-          if (Utils.hiHaColisio(e.getPosicio(), e.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
+          if (!e.isDestruint() && Utils.hiHaColisio(e.getPosicio(), e.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
             e.rebreDany(30); // Dany pesat per l'ona expansiva
             if (e.estaDestruit()) {
               marcador.incrementScore(100);
-              llistaEnemics.remove(j);
             }
           }
         }
@@ -235,25 +234,26 @@ void draw() {
       e.actualitzar();
       e.mostrar(this);
 
-      if (e.getPosicio().x < -50) {
+      if (e.getPosicio().x < -50 || e.haAcabatExplosio()) {
         llistaEnemics.remove(i);
         continue;
       }
 
-      if (e instanceof Interceptor) {
-        Dispar nouDispar = ((Interceptor) e).disparar();
-        if (nouDispar != null) balesEnemigues.add(nouDispar);
-      } else if (e instanceof Miner) {
-        Mina novaMina = ((Miner) e).deixarMina();
-        if (novaMina != null) llistaMines.add(novaMina);
-      }
+      if (!e.isDestruint()) {
+        if (e instanceof Interceptor) {
+          Dispar nouDispar = ((Interceptor) e).disparar();
+          if (nouDispar != null) balesEnemigues.add(nouDispar);
+        } else if (e instanceof Miner) {
+          Mina novaMina = ((Miner) e).deixarMina();
+          if (novaMina != null) llistaMines.add(novaMina);
+        }
 
-      if (jugador.colisionaAmb(e)) {
-        jugador.rebreDany(15);
-        e.rebreDany(100);
-        if (e.estaDestruit()) {
-          marcador.incrementScore(50);
-          llistaEnemics.remove(i);
+        if (jugador.colisionaAmb(e)) {
+          jugador.rebreDany(15);
+          e.rebreDany(100);
+          if (e.estaDestruit()) {
+            marcador.incrementScore(50);
+          }
         }
       }
     }
@@ -268,12 +268,11 @@ void draw() {
       // 4.1 Contra Enemics
       for (int i = llistaEnemics.size() - 1; i >= 0; i--) {
         Enemic e = llistaEnemics.get(i);
-        if (Utils.hiHaColisio(balaTeua.getPosicio(), balaTeua.getTamany(), e.getPosicio(), e.getTamany())) {
+        if (!e.isDestruint() && Utils.hiHaColisio(balaTeua.getPosicio(), balaTeua.getTamany(), e.getPosicio(), e.getTamany())) {
           e.rebreDany(10);
           balaHaXocat = true;
           if (e.estaDestruit()) {
             marcador.incrementScore(100);
-            llistaEnemics.remove(i);
           }
           break;
         }

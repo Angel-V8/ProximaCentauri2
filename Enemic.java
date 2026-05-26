@@ -10,18 +10,37 @@ public class Enemic implements Entitat {
   protected int vida;
   protected int tamany;
   protected float velocitat;
+  protected boolean destruint = false;
+  protected Animation animacioExplosio;
 
   // METODES
   public void actualitzar() {
-    this.posicio.sub(this.vel);
+    if (this.destruint) {
+      if (this.animacioExplosio != null) {
+        this.animacioExplosio.update();
+      }
+      // Frena a la quarta part de la seua velocitat
+      this.posicio.sub(PVector.mult(this.vel, 0.25f));
+    } else {
+      this.posicio.sub(this.vel);
+    }
   }
 
   public void mostrar(PApplet app) {
-    app.fill(255, 0, 0);
-    app.noStroke();
-    app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
+    if (this.destruint) {
+      if (this.animacioExplosio == null) {
+        this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 256, 256, 4, 4, 0);
+        this.animacioExplosio.setLoop(false);
+        this.animacioExplosio.setDelay(2);
+      }
+      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 128.0f);
+    } else {
+      app.fill(255, 0, 0);
+      app.noStroke();
+      app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
 
-    dibuixarBarraVida(app, 30);
+      dibuixarBarraVida(app, 30);
+    }
   }
 
   protected void dibuixarBarraVida(PApplet app, int vidaMaxima) {
@@ -36,12 +55,24 @@ public class Enemic implements Entitat {
   }
 
   public void rebreDany(int dany) {
+    if (this.destruint) return;
     this.vida -= dany;
-    if (this.vida < 0) this.vida = 0;
+    if (this.vida <= 0) {
+      this.vida = 0;
+      this.destruint = true;
+    }
   }
 
   public boolean estaDestruit() {
     return (this.vida <= 0);
+  }
+
+  public boolean isDestruint() {
+    return this.destruint;
+  }
+
+  public boolean haAcabatExplosio() {
+    return this.destruint && this.animacioExplosio != null && this.animacioExplosio.hasFinished();
   }
 
   public PVector getPosicio() {

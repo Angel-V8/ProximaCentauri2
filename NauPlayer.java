@@ -158,6 +158,7 @@ public class NauPlayer implements Entitat {
     // VEgem què és l'objecte
     if (obj instanceof Enemic) {
       Enemic e = (Enemic) obj;
+      if (e.isDestruint()) return false;
       pos2 = e.getPosicio();
       tam2 = e.getTamany();
     } else if (obj instanceof Meteorit) {

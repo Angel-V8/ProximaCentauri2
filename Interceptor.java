@@ -25,14 +25,21 @@ public class Interceptor extends Enemic {
   public void actualitzar() {
     super.actualitzar();
     
-    // Moviment ondulat (sinusoide)
-    this.angle += 0.03f; 
-    this.posicio.y = this.yInicial + (float)Math.sin(this.angle) * 30; 
-    
-    this.temporizador++;
+    if (!this.isDestruint()) {
+      // Moviment ondulat (sinusoide)
+      this.angle += 0.03f; 
+      this.posicio.y = this.yInicial + (float)Math.sin(this.angle) * 30; 
+      
+      this.temporizador++;
+    }
   }
 
   public void mostrar(PApplet app) {
+    if (this.isDestruint()) {
+      super.mostrar(app); // Dibuixa l'animació d'explosió heredada
+      return;
+    }
+
     app.fill(255, 0, 255);
     app.noStroke();
     app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
@@ -42,6 +49,7 @@ public class Interceptor extends Enemic {
   }
 
   public Dispar disparar() {
+    if (this.isDestruint()) return null; // No dispara si està explotant
     if (this.temporizador >= this.cooldown) {
       this.temporizador = 0;
       if (this.posicioJugador != null) {

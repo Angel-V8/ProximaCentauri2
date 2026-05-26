@@ -22,6 +22,15 @@ public class Kamikaze extends Enemic {
   
   // Sobreescrivim com es mou per fer que seguisca la nau del jugador de forma suau
   public void actualitzar() {
+    if (this.isDestruint()) {
+      if (this.animacioExplosio != null) {
+        this.animacioExplosio.update();
+      }
+      // Deriva cap endavant a la quarta part de la seua velocitat
+      this.posicio.add(PVector.mult(this.vel, 0.25f));
+      return;
+    }
+
     // Si encara està a la dreta del jugador, corregim la direcció de forma gradual
     if (this.posicioJugador != null && this.posicio.x > this.posicioJugador.x) {
       PVector objectiu = this.posicioJugador.copy();
@@ -41,6 +50,11 @@ public class Kamikaze extends Enemic {
   }
 
   public void mostrar(PApplet app) {
+    if (this.isDestruint()) {
+      super.mostrar(app); // Dibuixa l'animació d'explosió heredada de Enemic
+      return;
+    }
+
     app.fill(255, 255, 0); // Groc
     app.noStroke();
     app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);

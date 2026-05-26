@@ -15,11 +15,18 @@ public class Mina {
   private int radiExplosio;
   private boolean haDanyatJugador; // Evita danyar repetidament al jugador durant l'explosió
   private Animation animacio; // Animació del parpadeig de la mina
+  private Animation animacioExplosio; // Animació de l'explosió de la mina
 
   // METODES
   public void actualitzar() {
     if (explotant) {
-      radiExplosio += 5; // L'explosió es fa gran
+      radiExplosio += 5; // L'explosió es fa gran (física de dany expansiu)
+      if (this.animacioExplosio != null) {
+        this.animacioExplosio.update();
+      }
+      // Frena a la quarta part de la seua velocitat
+      this.posicio.x -= velocitatX * 0.25f;
+      this.posicio.y += velocitatY * 0.25f;
     } else {
       this.posicio.x -= velocitatX;
       this.posicio.y += velocitatY; 
@@ -37,12 +44,13 @@ public class Mina {
 
   public void mostrar(PApplet app) {
     if (explotant) {
-      // Dibuixem una explosió en lloc de la mina (ona expansiva de foc)
-      app.fill(255, 100, 0, 180); // Taronja transparent
-      app.noStroke();
-      app.ellipse(this.posicio.x, this.posicio.y, radiExplosio, radiExplosio);
-      app.fill(255, 0, 0, 220);   // Roig fosc al centre
-      app.ellipse(this.posicio.x, this.posicio.y, radiExplosio/2, radiExplosio/2);
+      if (this.animacioExplosio == null) {
+        // Spritesheet de 1024x1024 en quadrícula 4x4 -> 16 frames de 256x256
+        this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 256, 256, 4, 4, 0);
+        this.animacioExplosio.setLoop(false);
+        this.animacioExplosio.setDelay(2);
+      }
+      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 128.0f);
     } else {
       if (this.animacio == null) {
         // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
@@ -97,7 +105,7 @@ public class Mina {
   
   public boolean isExplotant() { return this.explotant; }
   
-  public boolean haAcabatExplosio() { return this.radiExplosio > 100; }
+  public boolean haAcabatExplosio() { return this.explotant && this.animacioExplosio != null && this.animacioExplosio.hasFinished(); }
 
   public int getRadiExplosio() { return this.radiExplosio; }
 
