@@ -4,6 +4,7 @@ import processing.core.PVector;
 public class Kamikaze extends Enemic {
 
   private PVector posicioJugador; // Referència a la posició del jugador per seguir-lo en temps real
+  private Animation animacio; // Animació dels propulsors del Kamikaze
 
   public Kamikaze(PVector posicioJugador) {
     super(); // Açò el fa nàixer en X=850 i Y=aleatòria
@@ -47,6 +48,10 @@ public class Kamikaze extends Enemic {
     
     // Apliquem el moviment
     this.posicio.add(this.vel);
+
+    if (this.animacio != null) {
+      this.animacio.update();
+    }
   }
 
   public void mostrar(PApplet app) {
@@ -55,9 +60,14 @@ public class Kamikaze extends Enemic {
       return;
     }
 
-    app.fill(255, 255, 0); // Groc
-    app.noStroke();
-    app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
+    if (this.animacio == null) {
+      // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
+      this.animacio = new Animation(app, "Kamikaze", "./img/kamikaze.png", 512, 512, 2, 2, 0);
+      this.animacio.setLoop(true);
+      this.animacio.setDelay(4); // Animación rápida de propulsores amarillos
+    }
+
+    this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
 
     // Barra de vida
     app.pushStyle();

@@ -9,6 +9,7 @@ public class Interceptor extends Enemic {
   protected int temporizador;
   protected int cooldown;
   private PVector posicioJugador; // Referència a la posició del jugador
+  private Animation animacio; // Animació dels propulsors de l'Interceptor
 
   public Interceptor(PVector posicioJugador) {
     super();
@@ -31,6 +32,10 @@ public class Interceptor extends Enemic {
       this.posicio.y = this.yInicial + (float)Math.sin(this.angle) * 30; 
       
       this.temporizador++;
+
+      if (this.animacio != null) {
+        this.animacio.update();
+      }
     }
   }
 
@@ -40,9 +45,14 @@ public class Interceptor extends Enemic {
       return;
     }
 
-    app.fill(255, 0, 255);
-    app.noStroke();
-    app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
+    if (this.animacio == null) {
+      // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
+      this.animacio = new Animation(app, "Interceptor", "./img/interceptor.png", 512, 512, 2, 2, 0);
+      this.animacio.setLoop(true);
+      this.animacio.setDelay(6); // Animación fluida de propulsores magenta
+    }
+
+    this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
     
     // Dibuixem la barra de vida de 30 HP màxims
     super.dibuixarBarraVida(app, 30);
