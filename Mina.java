@@ -73,7 +73,7 @@ public class Mina {
     this.velocitatY = (float)Math.random() * 1.5f - 0.75f; 
     this.tamany = 50; // Mida original de la mina
     this.actiu = true;
-    this.vida = 20; // Calen 2 tirs per a detonar-la
+    this.vida = 50; // NOU: Increment de vida a 50 (mateixa que els meteorits, calen 5 tirs per a detonar-la)
     this.explotant = false;
     this.radiExplosio = this.tamany;
     this.haDanyatJugador = false;

@@ -465,7 +465,7 @@ void carregarNivell(int num) {
     nivellActual = new Pantalla(this, 1, "Inici de l'expedició", "./img/lvl1.png", puntsBase + 500, 2500, 0, 0);
   } else if (num == 2) {
     // NIVELL 2: L'únic nivell 100% de temps i meteorits (esquivar 20 segons)
-    nivellActual = new Pantalla(this, 2, "Cinturó de Júpiter", "./img/lvl2.png", 99999, 0, 4, 20);
+    nivellActual = new Pantalla(this, 2, "Cinturó de Júpiter", "./img/lvl2.png", 99999, 0, 6, 20);
   } else if (num == 3) {
     nivellActual = new Pantalla(this, 3, "Arribada a Plutó", "./img/lvl3.png", puntsBase + 800, 2000, 1, 0);
   } else if (num == 4) {
