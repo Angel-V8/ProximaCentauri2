@@ -10,8 +10,9 @@ public class Kamikaze extends Enemic {
     super(); // Açò el fa nàixer en X=850 i Y=aleatòria
     
     this.vida = 20; // El kamikaze és més fràgil, mor de 2 tirs
-    this.velocitat = 7; // Ràpid, però esquivable
+    this.velocitat = 7; // Ràpid, pero esquivable
     this.posicioJugador = posicioJugador; // Guardem la referència per al seguiment dinàmic
+    this.tamany = 65; // NOU: Increment de tamany a 65 px per a fer-lo igual de gran que el Miner
     
     // Calculem la direcció inicial cap al jugador
     PVector objectiu = posicioJugador.copy();

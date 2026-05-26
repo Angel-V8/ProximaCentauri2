@@ -21,6 +21,7 @@ public class Interceptor extends Enemic {
     this.yInicial = this.posicio.y; 
     this.angle = 0;
     this.posicioJugador = posicioJugador;
+    this.tamany = 65; // NOU: Increment de tamany a 65 px per a fer-lo igual de gran que el Miner
   }
 
   public void actualitzar() {
