@@ -14,6 +14,7 @@ public class Mina {
   private boolean explotant;
   private int radiExplosio;
   private boolean haDanyatJugador; // Evita danyar repetidament al jugador durant l'explosió
+  private Animation animacio; // Animació del parpadeig de la mina
 
   // METODES
   public void actualitzar() {
@@ -27,6 +28,10 @@ public class Mina {
       if (this.posicio.y < 30 || this.posicio.y > 570) {
         this.velocitatY *= -1; // Invertim la direcció vertical
       }
+
+      if (this.animacio != null) {
+        this.animacio.update();
+      }
     }
   }
 
@@ -39,9 +44,13 @@ public class Mina {
       app.fill(255, 0, 0, 220);   // Roig fosc al centre
       app.ellipse(this.posicio.x, this.posicio.y, radiExplosio/2, radiExplosio/2);
     } else {
-      app.fill(128);
-      app.noStroke();
-      app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
+      if (this.animacio == null) {
+        // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
+        this.animacio = new Animation(app, "Mina", "./img/mina.png", 512, 512, 2, 2, 0);
+        this.animacio.setLoop(true);
+        this.animacio.setDelay(8); // Velocitat de parpadeig de la mina
+      }
+      this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
     }
   }
 

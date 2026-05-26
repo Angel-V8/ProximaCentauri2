@@ -37,8 +37,8 @@ public class Interceptor extends Enemic {
     app.noStroke();
     app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
     
-    // NOU: Mostrar la barra de vida de la superclasse (Enemic)
-    super.mostrar(app);
+    // Dibuixem la barra de vida de 30 HP màxims
+    super.dibuixarBarraVida(app, 30);
   }
 
   public Dispar disparar() {

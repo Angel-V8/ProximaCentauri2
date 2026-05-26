@@ -21,13 +21,16 @@ public class Enemic implements Entitat {
     app.noStroke();
     app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
 
-    // Barra de vida (Enemic normal = 10 HP)
+    dibuixarBarraVida(app, 30);
+  }
+
+  protected void dibuixarBarraVida(PApplet app, int vidaMaxima) {
     app.pushStyle();
     app.rectMode(PApplet.CORNER);
     app.fill(150, 0, 0);
     app.rect(this.posicio.x - 15, this.posicio.y - 25, 30, 4);
     app.fill(0, 255, 0);
-    float ampleVida = PApplet.map(Math.max(0, this.vida), 0, 30, 0, 30);
+    float ampleVida = PApplet.map(Math.min(vidaMaxima, Math.max(0, this.vida)), 0, vidaMaxima, 0, 30);
     app.rect(this.posicio.x - 15, this.posicio.y - 25, ampleVida, 4);
     app.popStyle();
   }

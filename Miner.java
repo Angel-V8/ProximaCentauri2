@@ -6,6 +6,7 @@ public class Miner extends Enemic {
   protected int temporizador;
   protected int cooldown;
   private PVector posicioJugador; // Referència a la posició del jugador
+  private Animation animacio; // Animació dels propulsors del Miner
 
   public Miner(PVector posicioJugador) {
     super();
@@ -27,15 +28,24 @@ public class Miner extends Enemic {
     }
     
     this.temporizador++;
+
+    if (this.animacio != null) {
+      this.animacio.update();
+    }
   }
 
   public void mostrar(PApplet app) {
-    app.fill(0, 255, 255);
-    app.noStroke();
-    app.ellipse(this.posicio.x, this.posicio.y, this.tamany, this.tamany);
+    if (this.animacio == null) {
+      // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
+      this.animacio = new Animation(app, "Miner", "./img/miner.png", 512, 512, 2, 2, 0);
+      this.animacio.setLoop(true);
+      this.animacio.setDelay(6); // Velocitat d'animació fluida per als propulsors
+    }
+
+    this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
     
-    // NOU: Cridem al mètode del pare (Enemic) perquè dibuixe la barra de vida!
-    super.mostrar(app);
+    // Dibuixem la barra de vida de 60 HP màxims (el miner té 60 HP)
+    super.dibuixarBarraVida(app, 60);
   }
 
   public Mina deixarMina() {
