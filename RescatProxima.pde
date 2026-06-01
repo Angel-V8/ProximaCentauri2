@@ -8,7 +8,7 @@ ControlP5 cp5;
 PImage fonsInici;
 Pantalla nivellActual;
 int contadorFramesNivell = 0;
-int numeroNivell = 1;
+int numeroNivell = 10; // NOU: Comença directament al nivell 10 (Boss)
 int estatJoc = -1;
 int tempsTransicio = 0;
 
@@ -17,6 +17,7 @@ String textTitol = "";
 
 Marcador marcador;
 NauPlayer jugador;
+MonstreFinal boss; // NOU: Referència global al boss final
 
 // Llistes Globals
 ArrayList<Enemic> llistaEnemics;
@@ -258,6 +259,31 @@ void draw() {
     }
 
     // ==========================================
+    // 3.5 GESTIÓ DEL JEFE FINAL (MONSTRE FINAL)
+    // ==========================================
+    if (boss != null && boss.isActiu()) {
+      boss.actualitzar();
+      boss.mostrar(this);
+
+      // El boss llança atacs a les bales enemigues generals del main
+      ArrayList<Dispar> disparsBoss = boss.disparar(jugador.getPosicio());
+      if (disparsBoss.size() > 0) {
+        balesEnemigues.addAll(disparsBoss);
+      }
+
+      // Col·lisió directa jugador contra el boss
+      if (!boss.isDestruint() && Utils.hiHaColisio(jugador.getPosicio(), jugador.getTamany(), boss.getPosicio(), boss.getAmple())) {
+        jugador.rebreDany(30); // Dany massiu de contacte
+      }
+
+      // Transició a la victòria quan s'ha acabat d'explotar el boss
+      if (boss.haAcabatExplosio()) {
+        estatJoc = 3;
+        tempsTransicio = millis();
+      }
+    }
+
+    // ==========================================
     // 4. BALES PLAYER (CONTRA TOT!)
     // ==========================================
     for (int j = jugador.getDisparos().size() - 1; j >= 0; j--) {
@@ -300,6 +326,17 @@ void draw() {
             balaHaXocat = true;
             m.rebreDany(10); // Restem 10 als 20 HP de la mina
             break;
+          }
+        }
+      }
+
+      // 4.4 Contra el Jefe Final (Monstre Final)
+      if (!balaHaXocat && boss != null && boss.isActiu() && !boss.isDestruint()) {
+        if (Utils.hiHaColisio(balaTeua.getPosicio(), balaTeua.getTamany(), boss.getPosicio(), boss.getAmple())) {
+          boss.rebreDany(10);
+          balaHaXocat = true;
+          if (boss.estaDestruit()) {
+            marcador.incrementScore(2000); // Gran bonificació
           }
         }
       }
@@ -368,7 +405,34 @@ void draw() {
       textSize(22);
       text("Polsa 'R' per a tornar al Menú Principal", width/2, height/2 + 60);
     }
-  }
+  } else if (estatJoc == 3) {
+      // ==========================================
+      // ESTAT 3: PANTALLA DE VICTÒRIA (JOC COMPLETAT)
+      // ==========================================
+      nivellActual.dibuixarFons();
+      fill(0, 40, 20, 200); // Fons verdós transparent molt premium
+      rect(0, 0, width, height);
+
+      textAlign(CENTER, CENTER);
+      fill(0, 255, 128); // Verd mar brillant
+      textSize(80);
+      text("VICTÒRIA!", width/2, height/2 - 70);
+
+      fill(255);
+      textSize(26);
+      text("Felicitats! Has salvat Pròxima Centauri!", width/2, height/2 + 10);
+      
+      fill(0, 255, 255);
+      textSize(22);
+      text("PUNTUACIÓ FINAL: " + marcador.getScore(), width/2, height/2 + 60);
+
+      // Text de reinici parpadejant
+      if (frameCount % 60 < 30) {
+        fill(255, 255, 0);
+        textSize(18);
+        text("Polsa 'R' per a tornar al Menú Principal", width/2, height/2 + 120);
+      }
+    }
 }
 
 // ==========================================
@@ -423,8 +487,8 @@ void keyPressed() {
   // Assegurem que l'espai funciona comprovant explícitament el keyCode 32
   if (key == ' ' || keyCode == 32 || key == 'x' || key == 'X') jugador.setDisparant(true);
 
-  // Si estem morts i polsem R, reiniciem el joc anant al menú
-  if (estatJoc == 2 && (key == 'r' || key == 'R')) {
+  // Si estem morts o hem guanyat i polsem R, reiniciem el joc anant al menú
+  if ((estatJoc == 2 || estatJoc == 3) && (key == 'r' || key == 'R')) {
     estatJoc = -1;
     cp5.show();
 
@@ -449,6 +513,7 @@ void carregarNivell(int num) {
   balesEnemigues.clear();
   llistaMines.clear();
   jugador.getDisparos().clear();
+  boss = null; // Reiniciem el boss
   contadorFramesNivell = 0;
 
   // Agafem els punts actuals per sumar-los a l'objectiu del nivell
@@ -475,6 +540,11 @@ void carregarNivell(int num) {
     nivellActual = new Pantalla(this, 8, "Viatge a la base", "./img/lvl8.png", puntsBase + 2600, 800, 2, 0);
   } else if (num == 9) {
     nivellActual = new Pantalla(this, 9, "El rescat de la base", "./img/lvl9.png", puntsBase + 3000, 600, 1, 0);
+  } else if (num == 10) {
+    // NIVELL 10: El Monstre Final (Jefe de Proxima Centauri)
+    // Utilitzem el fons del nivell 9 amb un objectiu molt gran que requereix matar el boss
+    nivellActual = new Pantalla(this, 10, "El Guardià de Pròxima Centauri", "./img/lvl9.png", 99999, 0, 0, 0);
+    boss = new MonstreFinal(10);
   } else {
     println("PREPARAT PEL BOSS!");
     exit();
@@ -496,7 +566,7 @@ public void iniciarJoc() {
   marcador.resetScore();
   jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
   estatJoc = 0;
-  numeroNivell = 1;
+  numeroNivell = 10; // Forçat a 10 per començar directament al Monstre Final
   carregarNivell(numeroNivell);
 }
 
