@@ -5,11 +5,13 @@
         <iniciar>INICIAR</iniciar>
         <config>CONFIGURACIO</config>
         <boss>JUGAR BOSS</boss>
+        <tornar>TORNAR</tornar>
     </cat>
     <eng>
         <titol>RESCUE AT PROXIMA CENTAURI</titol>
         <iniciar>START GAME</iniciar>
         <config>SETTINGS</config>
         <boss>PLAY BOSS</boss>
+        <tornar>BACK</tornar>
     </eng>
 </idiomes>

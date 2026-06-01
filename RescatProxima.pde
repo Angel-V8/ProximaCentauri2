@@ -10,6 +10,7 @@ Pantalla nivellActual;
 int contadorFramesNivell = 0;
 int numeroNivell = 1; // Comença al nivell 1
 int estatJoc = -1;
+boolean enConfiguracio = false; // Indica si estem al menú de configuració
 int tempsTransicio = 0;
 
 String idiomaActual = "cat";
@@ -50,9 +51,10 @@ void setup() {
 
   carregarConfiguracio();
 
-  // CONFIGURACIÓ DEL MENÚ
+  // CONFIGURACIÓ DEL MENÚ I CONTROLS CP5
   cp5 = new ControlP5(this);
 
+  // --- CONTROLS DEL MENÚ PRINCIPAL ---
   cp5.addButton("btnJugar")
     .setLabel("INICIAR")
     .setPosition(width/2 - 100, height/2)
@@ -65,14 +67,8 @@ void setup() {
     .setSize(200, 50)
     .plugTo(this, "obrirConfiguracio");
 
-  cp5.addButton("btnBoss")
-    .setLabel("JUGAR BOSS")
-    .setPosition(width/2 - 100, height/2 + 120)
-    .setSize(200, 50)
-    .plugTo(this, "iniciarBoss");
-
   cp5.addScrollableList("desplegableIdioma")
-    .setPosition(width/2 - 100, height/2 + 180)
+    .setPosition(width/2 - 100, height/2 + 120)
     .setSize(200, 100)
     .setBarHeight(40)
     .setItemHeight(40)
@@ -80,6 +76,59 @@ void setup() {
     .addItem("English", 1)
     .setLabel("Tria el teu idioma / Choose language")
     .close();
+
+  // --- CONTROLS DE CONFIGURACIÓ IN-GAME (Ocults per defecte) ---
+  cp5.addSlider("sliderVida")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2 - 120)
+    .setSize(200, 30)
+    .setRange(10, 200)
+    .setValue(configJSON.getInt("vida"))
+    .setColorActive(color(0, 255, 128))
+    .setColorForeground(color(0, 200, 100))
+    .setColorBackground(color(40, 40, 60));
+
+  cp5.addSlider("sliderVelocitat")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2 - 70)
+    .setSize(200, 30)
+    .setRange(1, 15)
+    .setValue(configJSON.getInt("velocitat"))
+    .setColorActive(color(0, 255, 128))
+    .setColorForeground(color(0, 200, 100))
+    .setColorBackground(color(40, 40, 60));
+
+  cp5.addSlider("sliderEscut")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2 - 20)
+    .setSize(200, 30)
+    .setRange(0, 5)
+    .setValue(configJSON.getInt("escut"))
+    .setColorActive(color(0, 255, 128))
+    .setColorForeground(color(0, 200, 100))
+    .setColorBackground(color(40, 40, 60));
+
+  cp5.addButton("btnBoss")
+    .setLabel("JUGAR BOSS")
+    .setPosition(width/2 - 100, height/2 + 50)
+    .setSize(200, 45)
+    .setColorBackground(color(200, 30, 80))
+    .setColorForeground(color(255, 50, 120))
+    .setColorActive(color(255, 100, 150))
+    .plugTo(this, "iniciarBoss");
+
+  cp5.addButton("btnTornar")
+    .setLabel("TORNAR")
+    .setPosition(width/2 - 100, height/2 + 115)
+    .setSize(200, 45)
+    .setColorBackground(color(30, 80, 200))
+    .setColorForeground(color(50, 120, 255))
+    .setColorActive(color(100, 150, 255))
+    .plugTo(this, "tornarAlMenu");
+
+  // Ajustem la visibilitat inicial dels dos menús
+  enConfiguracio = false;
+  actualitzarVisibilitatMenus();
 
   aplicarIdioma();
 }
@@ -92,10 +141,34 @@ void draw() {
     } else {
       background(0);
     }
-    fill(0, 255, 0);
-    textAlign(CENTER, CENTER);
-    textSize(60);
-    text(textTitol, width/2, height/3 - 50);
+
+    if (enConfiguracio) {
+      // Panel de fons translúcid per al menú de configuració
+      fill(10, 15, 30, 220); // Blavós fosc transparent molt premium
+      rectMode(CENTER);
+      rect(width/2, height/2, 500, 440, 20); // Caixa del menú de configuració
+      
+      // Títol
+      fill(0, 255, 128); // Verd neó
+      textAlign(CENTER, CENTER);
+      textSize(36);
+      text(idiomaActual.equals("cat") ? "CONFIGURACIÓ" : "SETTINGS", width/2, height/2 - 170);
+      
+      // Etiquetes dels sliders
+      fill(255);
+      textSize(15);
+      textAlign(RIGHT, CENTER);
+      float labelX = width/2 - 70; // 330 (20px a l'esquerra del slider)
+      text(idiomaActual.equals("cat") ? "VIDA:" : "HEALTH:", labelX, height/2 - 105);
+      text(idiomaActual.equals("cat") ? "VELOCITAT:" : "SPEED:", labelX, height/2 - 55);
+      text(idiomaActual.equals("cat") ? "ESCUT:" : "SHIELD:", labelX, height/2 - 5);
+    } else {
+      // Títol del joc normal
+      fill(0, 255, 0);
+      textAlign(CENTER, CENTER);
+      textSize(60);
+      text(textTitol, width/2, height/3 - 50);
+    }
   } else if (estatJoc == 0) {
 
     contadorFramesNivell++;
@@ -507,6 +580,8 @@ void keyPressed() {
   // Si estem morts o hem guanyat i polsem R, reiniciem el joc anant al menú
   if ((estatJoc == 2 || estatJoc == 3) && (key == 'r' || key == 'R')) {
     estatJoc = -1;
+    enConfiguracio = false;
+    actualitzarVisibilitatMenus();
     cp5.show();
 
     carregarConfiguracio();
@@ -577,6 +652,7 @@ void carregarNivell(int num) {
 }
 
 public void iniciarJoc() {
+  enConfiguracio = false;
   cp5.hide();
   carregarConfiguracio();
   jugador.resetJugador();
@@ -588,6 +664,7 @@ public void iniciarJoc() {
 }
 
 public void iniciarBoss() {
+  enConfiguracio = false;
   cp5.hide();
   carregarConfiguracio();
   jugador.resetJugador();
@@ -602,8 +679,68 @@ void carregarConfiguracio() {
   configJSON = loadJSONObject("data/config.json");
 }
 
+// Guarda els sliders a config.json i els aplica a la nau
+public void desarConfiguracio() {
+  if (configJSON == null) {
+    configJSON = new JSONObject();
+  }
+  
+  // Obtenim valors dels sliders de cp5
+  int vida = (int)cp5.get(Slider.class, "sliderVida").getValue();
+  int velocitat = (int)cp5.get(Slider.class, "sliderVelocitat").getValue();
+  int escut = (int)cp5.get(Slider.class, "sliderEscut").getValue();
+  
+  configJSON.setInt("vida", vida);
+  configJSON.setInt("velocitat", velocitat);
+  configJSON.setInt("escut", escut);
+  
+  saveJSONObject(configJSON, "data/config.json");
+  
+  // Apliquem configuració al jugador a l'instant
+  jugador.aplicarConfiguracio(vida, velocitat, escut);
+}
+
 public void obrirConfiguracio() {
-  launch(sketchPath("data/config.json"));
+  enConfiguracio = true;
+  actualitzarVisibilitatMenus();
+}
+
+public void tornarAlMenu() {
+  desarConfiguracio(); // Desar canvis fets en els sliders
+  enConfiguracio = false;
+  actualitzarVisibilitatMenus();
+}
+
+public void actualitzarVisibilitatMenus() {
+  if (estatJoc == -1) {
+    if (enConfiguracio) {
+      // Ocultar Principal
+      cp5.get("btnJugar").setVisible(false);
+      cp5.get("btnConfig").setVisible(false);
+      cp5.get("desplegableIdioma").setVisible(false);
+      
+      // Mostrar Config
+      cp5.get("sliderVida").setVisible(true);
+      cp5.get("sliderVelocitat").setVisible(true);
+      cp5.get("sliderEscut").setVisible(true);
+      cp5.get("btnBoss").setVisible(true);
+      cp5.get("btnTornar").setVisible(true);
+    } else {
+      // Mostrar Principal
+      cp5.get("btnJugar").setVisible(true);
+      cp5.get("btnConfig").setVisible(true);
+      cp5.get("desplegableIdioma").setVisible(true);
+      
+      // Ocultar Config
+      cp5.get("sliderVida").setVisible(false);
+      cp5.get("sliderVelocitat").setVisible(false);
+      cp5.get("sliderEscut").setVisible(false);
+      cp5.get("btnBoss").setVisible(false);
+      cp5.get("btnTornar").setVisible(false);
+    }
+  } else {
+    cp5.hide();
+  }
 }
 
 void aplicarIdioma() {
@@ -615,12 +752,16 @@ void aplicarIdioma() {
     String textIniciar = xmlIdioma.getChild("iniciar").getContent();
     String textConfig = xmlIdioma.getChild("config").getContent();
     String textBoss = xmlIdioma.getChild("boss") != null ? xmlIdioma.getChild("boss").getContent() : "JUGAR BOSS";
+    String textTornar = xmlIdioma.getChild("tornar") != null ? xmlIdioma.getChild("tornar").getContent() : "TORNAR";
 
     if (cp5 != null) {
       cp5.get(controlP5.Button.class, "btnJugar").setLabel(textIniciar);
       cp5.get(controlP5.Button.class, "btnConfig").setLabel(textConfig);
       if (cp5.get(controlP5.Button.class, "btnBoss") != null) {
         cp5.get(controlP5.Button.class, "btnBoss").setLabel(textBoss);
+      }
+      if (cp5.get(controlP5.Button.class, "btnTornar") != null) {
+        cp5.get(controlP5.Button.class, "btnTornar").setLabel(textTornar);
       }
     }
   }
