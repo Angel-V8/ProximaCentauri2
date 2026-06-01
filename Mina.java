@@ -43,6 +43,7 @@ public class Mina {
   }
 
   public void mostrar(PApplet app) {
+    if (explotant) {
       if (this.animacioExplosio == null) {
         // Spritesheet de 256x256 en quadrícula 4x4 -> 16 frames de 64x64
         this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 64, 64, 4, 4, 0);
