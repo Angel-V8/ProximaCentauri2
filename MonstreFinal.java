@@ -18,6 +18,11 @@ public class MonstreFinal {
   private boolean destruint;
   private Animation animacioExplosio;
 
+  // ANIMACIONS DE GOKU
+  private Animation animacioIdle;
+  private Animation animacioAtac;
+  private int temporizadorAtacVisual; // Controla quants frames es mostra Goku atacant
+
   // CONSTRUCTORS
 
   // Constructor per defecte
@@ -25,14 +30,15 @@ public class MonstreFinal {
     this.posicio = new PVector(900, 300); // Neix fora de pantalla a la dreta
     this.vida = 800; // Salut inicial consistent per a un cap de combat
     this.vidaMaxima = 800;
-    this.ample = 120; // Tamany imponent (abans 100)
-    this.alt = 120;
+    this.ample = 150; // Mida escalada per a fer a Goku imponent i visible
+    this.alt = 150;
     this.actiu = true;
     
     this.temporizadorDispar = 0;
     this.cooldownDispar = 60; // Ataca cada 1 segon (60 frames a 60 FPS)
     this.angleOscilacio = 0;
     this.destruint = false;
+    this.temporizadorAtacVisual = 0;
   }
 
   // Constructor parametritzat
@@ -54,6 +60,18 @@ public class MonstreFinal {
     }
 
     if (!this.actiu) return;
+
+    // Actualitzar temporitzador d'animació d'atac
+    if (this.temporizadorAtacVisual > 0) {
+      this.temporizadorAtacVisual--;
+    }
+
+    // Actualitzar l'animació corresponent
+    if (this.temporizadorAtacVisual > 0) {
+      if (this.animacioAtac != null) this.animacioAtac.update();
+    } else {
+      if (this.animacioIdle != null) this.animacioIdle.update();
+    }
 
     // 1. MOVIMENT DE PRESENTACIÓ: Avança cap a la seua posició fins x = 620
     if (this.posicio.x > 620) {
@@ -80,67 +98,27 @@ public class MonstreFinal {
       return;
     }
 
-    // -------------------------------------------------------------
-    // DIBUIX DEL BOSS (Procedural neó de gran qualitat)
-    // -------------------------------------------------------------
-    app.pushMatrix();
-    app.translate(this.posicio.x, this.posicio.y);
-    app.rectMode(PApplet.CENTER);
-    
-    // 1. FLAMES PROPULSORS (Motors del darrere - flameig dinàmic amb frameCount)
-    app.fill(255, 60, 0, 160 + (app.frameCount % 6) * 15);
-    app.noStroke();
-    app.triangle(this.ample / 2.0f - 10, -35, this.ample / 2.0f + 25, -35, this.ample / 2.0f - 10, -25);
-    app.triangle(this.ample / 2.0f - 10, 35, this.ample / 2.0f + 25, 35, this.ample / 2.0f - 10, 25);
-    app.fill(255, 180, 0, 180 + (app.frameCount % 4) * 20);
-    app.triangle(this.ample / 2.0f - 5, -10, this.ample / 2.0f + 40, 0, this.ample / 2.0f - 5, 10);
-    
-    // 2. ALES EXTERIORS (Metàl·liques amb contrast)
-    app.fill(50, 50, 70);
-    app.stroke(0, 180, 255); // Vora blau elèctric
-    app.strokeWeight(3);
-    
-    app.beginShape();
-    app.vertex(this.ample / 2.0f, -20);
-    app.vertex(20, -this.alt / 2.0f);
-    app.vertex(-this.ample / 2.0f + 15, -this.alt / 2.0f + 15);
-    app.vertex(-20, -20);
-    app.endShape(PApplet.CLOSE);
-    
-    app.beginShape();
-    app.vertex(this.ample / 2.0f, 20);
-    app.vertex(20, this.alt / 2.0f);
-    app.vertex(-this.ample / 2.0f + 15, this.alt / 2.0f - 15);
-    app.vertex(-20, 20);
-    app.endShape(PApplet.CLOSE);
-    
-    // 3. FUSELLATGE CENTRAL (Blindatge fosc)
-    app.fill(30, 30, 40);
-    app.stroke(255, 0, 100); // Vora vermell neó
-    app.beginShape();
-    app.vertex(this.ample / 2.0f - 15, 0);
-    app.vertex(15, -30);
-    app.vertex(-this.ample / 2.0f + 20, -20);
-    app.vertex(-this.ample / 2.0f, 0);
-    app.vertex(-this.ample / 2.0f + 20, 20);
-    app.vertex(15, 30);
-    app.endShape(PApplet.CLOSE);
-    
-    // 4. CABINA ENVIADA (Vermell intens de combat)
-    app.fill(255, 0, 50);
-    app.noStroke();
-    app.triangle(-this.ample / 2.0f + 15, 0, -15, -12, -15, 12);
-    
-    // 5. NUCLIS D'ENERGIA (Pulsants en verd neó / cian)
-    if (app.frameCount % 24 < 12) {
-      app.fill(0, 255, 200);
-    } else {
-      app.fill(0, 150, 180);
+    // Inicialització dels Spritesheets de Goku
+    if (this.animacioIdle == null) {
+      // Fila 1 de goku.png: Goku flotant/repaus
+      this.animacioIdle = new Animation(app, "GokuIdle", "./img/goku.png", 512, 512, 2, 2, 1);
+      this.animacioIdle.setLoop(true);
+      this.animacioIdle.setDelay(12);
     }
-    app.ellipse(5, -18, 14, 14);
-    app.ellipse(5, 18, 14, 14);
-    
-    app.popMatrix();
+    if (this.animacioAtac == null) {
+      // Fila 2 de goku.png: Goku llançant Kamehameha
+      this.animacioAtac = new Animation(app, "GokuAtac", "./img/goku.png", 512, 512, 2, 2, 2);
+      this.animacioAtac.setLoop(true);
+      this.animacioAtac.setDelay(6);
+    }
+
+    // Dibuix de Goku mirant cap a l'esquerra (-1 en la direcció)
+    float escala = (float)this.ample / 512.0f;
+    if (this.temporizadorAtacVisual > 0) {
+      this.animacioAtac.display(this.posicio, -1, escala);
+    } else {
+      this.animacioIdle.display(this.posicio, -1, escala);
+    }
 
     // -------------------------------------------------------------
     // DIBUIX DE LA BARRA DE VIDA DEL JEFE (HUD INFERIOR PANTALLA)
@@ -167,7 +145,7 @@ public class MonstreFinal {
     app.fill(255);
     app.textAlign(PApplet.CENTER, PApplet.CENTER);
     app.textSize(13);
-    app.text("PROXIMA CENTAURI GUARDIAN (BOSS)", app.width / 2, app.height - 41);
+    app.text("PROXIMA CENTAURI GUARDIAN (GOKU BOSS)", app.width / 2, app.height - 41);
     
     app.popStyle();
   }
@@ -182,6 +160,7 @@ public class MonstreFinal {
       this.temporizadorDispar++;
       if (this.temporizadorDispar >= this.cooldownDispar) {
         this.temporizadorDispar = 0;
+        this.temporizadorAtacVisual = 25; // NOU: Activar posat d'atac durant 25 frames
 
         double atzar = Math.random();
         if (atzar < 0.45) {
