@@ -16,6 +16,7 @@ public class Mina {
   private boolean haDanyatJugador; // Evita danyar repetidament al jugador durant l'explosió
   private Animation animacio; // Animació del parpadeig de la mina
   private Animation animacioExplosio; // Animació de l'explosió de la mina
+  private int vidaMaxima; // NOU: Registrar la vida màxima per a la barra de vida
 
   // METODES
   public void actualitzar() {
@@ -60,6 +61,18 @@ public class Mina {
         this.animacio.setDelay(8); // Velocitat de parpadeig de la mina
       }
       this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
+
+      // NOU: Dibuixem la barra de vida només si ha rebut dany (vida < vidaMaxima)
+      if (this.vida < this.vidaMaxima) {
+        app.pushStyle();
+        app.rectMode(processing.core.PApplet.CORNER);
+        app.fill(150, 0, 0); // Vermell fosc de fons
+        app.rect(this.posicio.x - 15, this.posicio.y - (this.tamany/2 + 10), 30, 4);
+        app.fill(0, 255, 0); // Verd de vida
+        float ampleVida = PApplet.map(Math.max(0, this.vida), 0, this.vidaMaxima, 0, 30);
+        app.rect(this.posicio.x - 15, this.posicio.y - (this.tamany/2 + 10), ampleVida, 4);
+        app.popStyle();
+      }
     }
   }
 
@@ -75,6 +88,7 @@ public class Mina {
     this.tamany = 75; // NOU: Mida de la mina incrementada a 75 px (més gran i amenaçadora)
     this.actiu = true;
     this.vida = 100; // NOU: Més vida per a la mina (100 HP, calen 10 tirs de jugador per detonar-la)
+    this.vidaMaxima = 100; // NOU: Inicialitzar la vida màxima
     this.explotant = false;
     this.radiExplosio = this.tamany;
     this.haDanyatJugador = false;
