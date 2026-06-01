@@ -47,13 +47,13 @@ public class Interceptor extends Enemic {
     }
 
     if (this.animacio == null) {
-      // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
-      this.animacio = new Animation(app, "Interceptor", "./img/interceptor.png", 512, 512, 2, 2, 0);
+      // Spritesheet de 256x256 en quadrícula 2x2 -> 4 frames de 128x128
+      this.animacio = new Animation(app, "Interceptor", "./img/interceptor.png", 128, 128, 2, 2, 0);
       this.animacio.setLoop(true);
       this.animacio.setDelay(6); // Animación fluida de propulsores magenta
     }
 
-    this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
+    this.animacio.display(this.posicio, 1, (float)this.tamany / 128.0f);
     
     // Dibuixem la barra de vida de 30 HP màxims
     super.dibuixarBarraVida(app, 30);
