@@ -16,7 +16,7 @@ public class Interceptor extends Enemic {
     this.velocitat = 2.5f;
     this.vel = this.direccio.copy().mult(velocitat);
     this.temporizador = 0;
-    this.cooldown = 70; // NOU: Augment de cooldown a 70 frames (tir més espaiat, abans 40)
+    this.cooldown = 40; // Restaurat: Cooldown original ràpid de 40 frames
     
     this.yInicial = this.posicio.y; 
     this.angle = 0;
