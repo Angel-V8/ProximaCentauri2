@@ -276,6 +276,17 @@ void draw() {
         jugador.rebreDany(30); // Dany massiu de contacte
       }
 
+      // Col·lisió del Kamehameha del boss contra el jugador (desintegrador!)
+      if (boss.isDisparantKamehameha()) {
+        float limitX = boss.getPosicio().x - 40;
+        if (jugador.getPosicio().x - jugador.getTamany()/2.0f <= limitX) {
+          float radiCollisioY = jugador.getTamany()/2.0f + 48.0f; // Amplada del feix + radi de la nau
+          if (Math.abs(jugador.getPosicio().y - boss.getKamehamehaY()) < radiCollisioY) {
+            jugador.rebreDany(2); // Dany continu per frame (2 HP = desintegració en 50 frames ~ 0.8s)
+          }
+        }
+      }
+
       // Transició a la victòria quan s'ha acabat d'explotar el boss
       if (boss.haAcabatExplosio()) {
         estatJoc = 3;

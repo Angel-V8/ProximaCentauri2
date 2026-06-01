@@ -17,13 +17,19 @@ public class MonstreFinal {
   private boolean destruint;
   private Animation animacioExplosio;
 
-  // MOVIMENT NATURAL (Lliure de patrons rígids)
+  // MOVIMENT NATURAL
   private PVector targetPosicio;
   private int temporizadorNouTarget;
 
   // GESTIÓ D'ATACS RÀPIDS (Ràfegues)
   private int rafagaRestant;
   private int temporizadorRafaga;
+
+  // MECÀNICA DEL KAMEHAMEHA
+  private boolean cargantKamehameha;
+  private boolean disparantKamehameha;
+  private int temporizadorKamehameha;
+  private float kamehamehaY;
 
   // ANIMACIÓ DE GOKU I VECTOR ZERO
   private Animation animacio;
@@ -41,7 +47,7 @@ public class MonstreFinal {
     this.actiu = true;
     
     this.temporizadorDispar = 0;
-    this.cooldownDispar = 60; // Ataca cada 1 segon per defecte
+    this.cooldownDispar = 60; // Ataca cada 1 segon
     this.destruint = false;
 
     this.targetPosicio = new PVector(620, 300);
@@ -49,6 +55,11 @@ public class MonstreFinal {
 
     this.rafagaRestant = 0;
     this.temporizadorRafaga = 0;
+
+    this.cargantKamehameha = false;
+    this.disparantKamehameha = false;
+    this.temporizadorKamehameha = 0;
+    this.kamehamehaY = 300.0f;
 
     this.posicioZero = new PVector(0, 0);
   }
@@ -81,19 +92,39 @@ public class MonstreFinal {
       this.animacio.update();
     }
 
-    // 1. MOVIMENT DE PRESENTACIÓ: Avança cap a la seua posició fins x = 620
+    // 1. GESTIÓ DE LA CÀRREGA DEL KAMEHAMEHA (Goku es queda quiet levitant)
+    if (this.cargantKamehameha) {
+      this.temporizadorKamehameha++;
+      if (this.temporizadorKamehameha >= 70) { // 70 frames de càrrega (~1.1 segons)
+        this.cargantKamehameha = false;
+        this.disparantKamehameha = true;
+        this.temporizadorKamehameha = 0;
+      }
+      return;
+    }
+
+    // 2. GESTIÓ DEL DISPAR DEL KAMEHAMEHA (Goku manté la posició)
+    if (this.disparantKamehameha) {
+      this.temporizadorKamehameha++;
+      if (this.temporizadorKamehameha >= 45) { // 45 frames de raig actiu (~0.75 segons)
+        this.disparantKamehameha = false;
+        this.temporizadorKamehameha = 0;
+      }
+      return;
+    }
+
+    // 3. MOVIMENT DE PRESENTACIÓ: Avança cap a la seua posició fins x = 620
     if (this.posicio.x > 620) {
       this.posicio.x -= 2.0f;
     } else {
-      // 2. MOVIMENT DE COMBAT FLUID: El cap tria un punt de destinació aleatori i hi vola de forma suau
+      // 4. MOVIMENT DE COMBAT FLUID: El cap tria un punt de destinació aleatori i hi vola
       this.temporizadorNouTarget++;
-      if (this.temporizadorNouTarget >= 120) { // Canvia de rumb cada 2 segons (120 frames)
+      if (this.temporizadorNouTarget >= 120) { // Canvia de rumb cada 2 segons
         this.temporizadorNouTarget = 0;
         this.targetPosicio.x = (float)(Math.random() * 150) + 530; // X entre 530 i 680
         this.targetPosicio.y = (float)(Math.random() * 360) + 120; // Y entre 120 i 480
       }
       
-      // Interpolació suau de posició
       this.posicio.x = lerp(this.posicio.x, this.targetPosicio.x, 0.025f);
       this.posicio.y = lerp(this.posicio.y, this.targetPosicio.y, 0.025f);
     }
@@ -104,7 +135,6 @@ public class MonstreFinal {
 
     if (this.destruint) {
       if (this.animacioExplosio == null) {
-        // Spritesheet de 256x256 en graella 4x4 -> 16 frames de 64x64
         this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 64, 64, 4, 4, 0);
         this.animacioExplosio.setLoop(false);
         this.animacioExplosio.setDelay(4);
@@ -113,21 +143,88 @@ public class MonstreFinal {
       return;
     }
 
-    // Inicialització de l'animació de Goku (primera fila de goku.png, frames de 64x64)
+    // Inicialització de l'animació de Goku
     if (this.animacio == null) {
       this.animacio = new Animation(app, "Goku", "./img/goku.png", 64, 64, 4, 4, 1);
       this.animacio.setLoop(true);
-      this.animacio.setDelay(8); // Velocitat de l'animació
+      this.animacio.setDelay(8);
     }
 
-    // NOU RENDER FLUID: Efecte d'oscil·lació vertical procedural ('hover') per simular vol natural
-    float hoverY = (float)Math.sin(app.frameCount * 0.08f) * 6.0f;
+    // Dibuix dels efectes especials del Kamehameha abans del personatge
+    if (this.cargantKamehameha) {
+      // A) Corredor de perill vermell translúcid (mida del futur làser) i línia guia
+      app.pushStyle();
+      app.rectMode(PApplet.CORNERS);
+      app.noStroke();
+      
+      // Si falten menys de 15 frames, ja està blocat: parpelleja agressivament en vermell/taronja brillant
+      boolean blocat = (this.temporizadorKamehameha >= 55);
+      if (blocat) {
+        float warningAlpha = 40 + (app.frameCount % 5) * 25; // Parpelleig molt ràpid i intens
+        app.fill(255, 50, 0, warningAlpha);
+        app.rect(0, this.kamehamehaY - 50, this.posicio.x - 40, this.kamehamehaY + 50);
+        
+        app.stroke(255, 200, 0, 220); // Línia groga de bloqueig
+        app.strokeWeight(4);
+      } else {
+        float warningAlpha = 15 + (app.frameCount % 10) * 6; // Parpelleig suau de guia
+        app.fill(255, 0, 0, warningAlpha);
+        app.rect(0, this.kamehamehaY - 50, this.posicio.x - 40, this.kamehamehaY + 50);
+        
+        app.stroke(255, 0, 0, 150); // Línia vermella de seguiment
+        app.strokeWeight(2);
+      }
+      app.line(this.posicio.x - 40, this.posicio.y, 0, this.kamehamehaY);
+      app.popStyle();
 
+      // B) Bola d'energia blava creixent a les seues mans
+      float midaBola = PApplet.map(this.temporizadorKamehameha, 0, 70, 15, 100);
+      app.pushStyle();
+      app.noStroke();
+      app.fill(0, 220, 255, 180 + (app.frameCount % 5) * 15);
+      app.ellipse(this.posicio.x - 40, this.posicio.y, midaBola, midaBola);
+      app.fill(255, 255, 255, 230);
+      app.ellipse(this.posicio.x - 40, this.posicio.y, midaBola * 0.5f, midaBola * 0.5f);
+      app.popStyle();
+    } 
+    
+    if (this.disparantKamehameha) {
+      // C) Raig de làser massiu (Tres capes de color per a efecte neó DBZ - Amplada de 100px total)
+      app.pushStyle();
+      app.rectMode(PApplet.CORNERS);
+      app.noStroke();
+      
+      // Capa 1: Aura blava resplendent exterior (100px amplada)
+      app.fill(0, 180, 255, 130 + (app.frameCount % 4) * 30);
+      app.rect(0, this.kamehamehaY - 50, this.posicio.x - 40, this.kamehamehaY + 50);
+      
+      // Capa 2: Cos de feix cian (60px amplada)
+      app.fill(0, 240, 255, 220);
+      app.rect(0, this.kamehamehaY - 30, this.posicio.x - 40, this.kamehamehaY + 30);
+      
+      // Capa 3: Nucli blanc pur desintegrador (30px amplada)
+      app.fill(255, 255, 255, 255);
+      app.rect(0, this.kamehamehaY - 15, this.posicio.x - 40, this.kamehamehaY + 15);
+      
+      app.popStyle();
+
+      // D) Esfera de descàrrega a les mans de Goku
+      app.pushStyle();
+      app.noStroke();
+      app.fill(0, 220, 255, 200 + (app.frameCount % 3) * 20);
+      app.ellipse(this.posicio.x - 40, this.posicio.y, 130, 130);
+      app.fill(255);
+      app.ellipse(this.posicio.x - 40, this.posicio.y, 70, 70);
+      app.popStyle();
+    }
+
+    // Render de Goku girat mirant a l'esquerra
+    float hoverY = (float)Math.sin(app.frameCount * 0.08f) * 6.0f;
     app.pushMatrix();
     app.translate(this.posicio.x, this.posicio.y + hoverY);
-    app.scale(-1, 1); // Voltem horitzontalment per fer que miri a l'esquerra (cap al jugador)
+    app.scale(-1, 1);
     float escala = (float)this.ample / 64.0f;
-    this.animacio.display(this.posicioZero, 1, escala); // Dibuixat a (0,0) in-place
+    this.animacio.display(this.posicioZero, 1, escala);
     app.popMatrix();
 
     // -------------------------------------------------------------
@@ -135,18 +232,18 @@ public class MonstreFinal {
     // -------------------------------------------------------------
     app.pushStyle();
     
-    // Contenidor HUD fons fosc
+    // Contenidor HUD
     app.fill(0, 0, 10, 180);
     app.noStroke();
     app.rectMode(PApplet.CENTER);
     app.rect(app.width / 2, app.height - 40, 520, 34, 10);
     
-    // Fons interior vermell apagadíssim
+    // Fons interior vermell
     app.rectMode(PApplet.CORNER);
     app.fill(60, 10, 10);
     app.rect(app.width / 2 - 250, app.height - 50, 500, 20, 5);
     
-    // Barra activa vermell neó brillant
+    // Barra activa
     app.fill(255, 20, 60);
     float ampleVida = PApplet.map(Math.max(0, this.vida), 0, this.vidaMaxima, 0, 500);
     app.rect(app.width / 2 - 250, app.height - 50, ampleVida, 20, 5);
@@ -160,7 +257,7 @@ public class MonstreFinal {
     app.popStyle();
   }
 
-  // Lógica per llançar atacs al jugador (amb 4 patrons diferents)
+  // Lógica per llançar atacs al jugador
   public java.util.ArrayList<Dispar> disparar(PVector posicioJugador) {
     java.util.ArrayList<Dispar> nousDispars = new java.util.ArrayList<Dispar>();
     if (this.destruint || !this.actiu) return nousDispars;
@@ -168,43 +265,56 @@ public class MonstreFinal {
     // Només ataca si ja s'ha col·locat en posició de combat
     if (this.posicio.x <= 620) {
       
-      // PATRÓ 1: Ràfega activa de Ki Blasts (Kamehameha Barrage)
+      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 55 per poder esquivar-lo al final)
+      if (this.cargantKamehameha) {
+        if (this.temporizadorKamehameha < 55) {
+          this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.15f); // Seguiment molt més ràpid i agressiu
+        }
+        return nousDispars;
+      }
+
+      // Si ja està disparant el feix massiu, no fa altres accions
+      if (this.disparantKamehameha) {
+        return nousDispars;
+      }
+
+      // PATRÓ 1: Ràfega activa de Ki Blasts
       if (this.rafagaRestant > 0) {
         this.temporizadorRafaga++;
-        if (this.temporizadorRafaga >= 8) { // Dispara un blast cada 8 frames
+        if (this.temporizadorRafaga >= 8) {
           this.temporizadorRafaga = 0;
           this.rafagaRestant--;
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), posicioJugador, true));
         }
-        return nousDispars; // Continuem la ràfega sense executar altres atacs
+        return nousDispars;
       }
 
       this.temporizadorDispar++;
       if (this.temporizadorDispar >= this.cooldownDispar) {
         this.temporizadorDispar = 0;
 
-        // Triem un dels 4 atacs de Goku a l'atzar
-        int tipusAtac = (int)(Math.random() * 4);
+        // Triem un dels 5 atacs possibles a l'atzar
+        int tipusAtac = (int)(Math.random() * 5);
 
         if (tipusAtac == 0) {
-          // ATAC 0: Ventall triple de ràfega recte i oblic
+          // ATAC 0: Ventall triple
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), true));
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y - 20), new PVector(0, this.posicio.y - 120), true));
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y + 20), new PVector(0, this.posicio.y + 120), true));
         } 
         else if (tipusAtac == 1) {
-          // ATAC 1: Doble blast ràpid directe al jugador
+          // ATAC 1: Doble blast dirigit
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y - 25), posicioJugador, true));
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y + 25), posicioJugador, true));
         } 
         else if (tipusAtac == 2) {
-          // ATAC 2: Ràfega ràpida seqüencial (inici de Ki Blast Barrage)
-          this.rafagaRestant = 5; // Llança 5 trets en total en els següents frames
+          // ATAC 2: Ràfega seqüencial
+          this.rafagaRestant = 5;
           this.temporizadorRafaga = 0;
           nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), posicioJugador, true));
         } 
-        else {
-          // ATAC 3: Ona Radial/Espiral (6 bales simultànies en 360º)
+        else if (tipusAtac == 3) {
+          // ATAC 3: Ona Radial 360º
           float anglePas = (float)(Math.PI * 2) / 6.0f;
           for (int i = 0; i < 6; i++) {
             float angle = i * anglePas;
@@ -212,6 +322,12 @@ public class MonstreFinal {
             float targetY = this.posicio.y + (float)Math.sin(angle) * 200.0f;
             nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), new PVector(targetX, targetY), true));
           }
+        }
+        else {
+          // ATAC 4 (NOU): KAMEHAMEHA LASER DESINTEGRADOR
+          this.cargantKamehameha = true;
+          this.temporizadorKamehameha = 0;
+          this.kamehamehaY = posicioJugador.y; // Fixa la Y inicial apuntant al jugador
         }
       }
     }
@@ -257,5 +373,14 @@ public class MonstreFinal {
 
   public void setActiu(boolean b) {
     this.actiu = b;
+  }
+
+  // GETTERS PER AL KAMEHAMEHA
+  public boolean isDisparantKamehameha() {
+    return this.disparantKamehameha;
+  }
+
+  public float getKamehamehaY() {
+    return this.kamehamehaY;
   }
 }
