@@ -29,11 +29,11 @@ public class Enemic implements Entitat {
   public void mostrar(PApplet app) {
     if (this.destruint) {
       if (this.animacioExplosio == null) {
-        this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 256, 256, 4, 4, 0);
+        this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 64, 64, 4, 4, 0);
         this.animacioExplosio.setLoop(false);
         this.animacioExplosio.setDelay(2);
       }
-      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 128.0f);
+      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 32.0f);
     } else {
       app.fill(255, 0, 0);
       app.noStroke();

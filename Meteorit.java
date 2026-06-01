@@ -36,13 +36,13 @@ public class Meteorit implements Entitat {
   public void mostrar(PApplet app) {
     if (this.destruint) {
       if (this.animacioExplosio == null) {
-        // Spritesheet de 1024x1024 amb 4 files i 4 columnes -> 16 frames de 256x256
-        this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 256, 256, 4, 4, 0);
+        // Spritesheet de 256x256 amb 4 files i 4 columnes -> 16 frames de 64x64
+        this.animacioExplosio = new Animation(app, "Explosio", "./img/explosion.png", 64, 64, 4, 4, 0);
         this.animacioExplosio.setLoop(false);
         this.animacioExplosio.setDelay(2); // Animación rápida y fluida
       }
       // Dibuixem l'explosió amb un tamany proporcional (escala) al tamany del meteorit
-      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 128.0f);
+      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 32.0f);
     } else {
       if (spriteAsteroid == null) {
         spriteAsteroid = app.loadImage("./img/asteroid.png");
