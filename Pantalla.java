@@ -90,6 +90,14 @@ public class Pantalla {
     }
     app.popStyle();
 
+    // 3. CAPA DE CONTRAST: Filtre semi-transparent per enfosquir el fons i fer destacar les entitats (nau, enemics, meteorits i bales)
+    app.pushStyle();
+    app.fill(0, 0, 0, 110); // Negre amb opacitat de 110 (sobre 255)
+    app.noStroke();
+    app.rectMode(PApplet.CORNER);
+    app.rect(0, 0, app.width, app.height);
+    app.popStyle();
+
     // Dibuixem el titol del nivell dalt a l'esquerra
     app.fill(255);
     app.textSize(18);
