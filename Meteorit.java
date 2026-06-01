@@ -26,8 +26,9 @@ public class Meteorit implements Entitat {
       if (this.animacioExplosio != null) {
         this.animacioExplosio.update();
       }
-      // El meteorit frena a la quarta part de la seua velocitat mentre explota
-      this.posicio.sub(PVector.mult(this.velocitat, 0.25f));
+      // El meteorit frena a la quarta part de la seua velocitat mentre explota (in-place per evitar instanciar PVector)
+      this.posicio.x -= this.velocitat.x * 0.25f;
+      this.posicio.y -= this.velocitat.y * 0.25f;
     } else {
       this.posicio.sub(this.velocitat);
       this.angle += this.rotationSpeed;

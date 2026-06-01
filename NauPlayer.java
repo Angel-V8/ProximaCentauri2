@@ -139,12 +139,14 @@ public class NauPlayer implements Entitat {
     if (this.timer >= this.cooldown) {
       this.timer = 0;
       if (this.tempsDobleDispar > 0) {
-        PVector pos1 = this.posicio.copy(); pos1.y -= 10;
-        PVector pos2 = this.posicio.copy(); pos2.y += 10;
+        // Creem directament les noves posicions sense fer .copy() innecessaris abans
+        PVector pos1 = new PVector(this.posicio.x, this.posicio.y - 10);
+        PVector pos2 = new PVector(this.posicio.x, this.posicio.y + 10);
         this.disparos.add(new Dispar(pos1, false));
         this.disparos.add(new Dispar(pos2, false));
       } else {
-        this.disparos.add(new Dispar(this.posicio.copy(), false));
+        // Passem this.posicio directament, ja que el constructor de Dispar ja fa el seu propi copy()
+        this.disparos.add(new Dispar(this.posicio, false));
       }
     }
   }

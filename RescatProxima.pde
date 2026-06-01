@@ -11,12 +11,10 @@ int contadorFramesNivell = 0;
 int numeroNivell = 1;
 int estatJoc = -1;
 int tempsTransicio = 0;
-int tempsIniciNivell = 0;
 
 String idiomaActual = "cat";
 String textTitol = "";
 
-int puntsJugador = 0;
 Marcador marcador;
 NauPlayer jugador;
 
@@ -29,8 +27,9 @@ ArrayList<Booster> llistaBoosters;
 ArrayList<Dispar> balesEnemigues;
 ArrayList<Mina> llistaMines;
 
-int tempsUltimSpawn = 0;
 int intervalSpawn = 2000;
+int framesIntervalSpawn = 120; // NOU: Pre-calculat per a optimització
+int framesIntervalMeteorits = 0; // NOU: Pre-calculat per a optimització
 
 void setup() {
   size(800, 600);
@@ -93,7 +92,7 @@ void draw() {
   } else if (estatJoc == 0) {
 
     contadorFramesNivell++;
-    if (nivellActual.getNumMeteorits() > 0) generarMeteorits();
+    generarMeteorits();
 
     boolean superado = false;
     if (nivellActual.getDurada() > 0) {
@@ -377,13 +376,9 @@ void draw() {
 // ==========================================
 
 void generarEnemics() {
-  if (intervalSpawn <= 0) return;
+  if (framesIntervalSpawn <= 0) return;
 
-  // Convertim l'interval (ms) a frames (assumint 60 FPS aprox)
-  int framesInterval = (int)((intervalSpawn / 1000.0f) * 60);
-  if (framesInterval <= 0) framesInterval = 60;
-
-  if (contadorFramesNivell > 0 && contadorFramesNivell % framesInterval == 0) {
+  if (contadorFramesNivell > 0 && contadorFramesNivell % framesIntervalSpawn == 0) {
     int atzar = (int)random(0, 3);
 
     // Ajustem la IA/Probabilitat segons el nivell i la narrativa
@@ -411,9 +406,7 @@ void generarBoosters() {
 }
 
 void generarMeteorits() {
-  // Extraiem la freqüència configurada directament de la Pantalla
-  int freq = nivellActual.getNumMeteorits();
-  if (freq > 0 && contadorFramesNivell % (60 / freq) == 0) {
+  if (framesIntervalMeteorits > 0 && contadorFramesNivell % framesIntervalMeteorits == 0) {
     // NOU: Meteorits de diferents tamanys i danys configurats dinàmicament
     int tamanyAleatori = (int)random(20, 65); // Mida aleatòria
     int danyAleatori = tamanyAleatori / 2;    // El dany és proporcional a la mida
@@ -487,6 +480,13 @@ void carregarNivell(int num) {
     exit();
   }
   intervalSpawn = nivellActual.getVelocitatSpawn();
+
+  // NOU: Pre-calculem els intervals de frames per optimització
+  framesIntervalSpawn = (intervalSpawn > 0) ? (int)((intervalSpawn / 1000.0f) * 60) : 0;
+  if (framesIntervalSpawn <= 0 && intervalSpawn > 0) framesIntervalSpawn = 60;
+
+  int freqMet = nivellActual.getNumMeteorits();
+  framesIntervalMeteorits = (freqMet > 0) ? (60 / freqMet) : 0;
 }
 
 public void iniciarJoc() {

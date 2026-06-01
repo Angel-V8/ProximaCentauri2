@@ -33,15 +33,17 @@ public class Mina {
       this.posicio.x -= velocitatX;
       this.posicio.y += velocitatY; 
 
-      // NOU: Atracció magnètica si el jugador està a prop (250px)
+      // NOU: Atracció magnètica si el jugador està a prop (250px) (in-place per evitar GC)
       if (this.posicioJugador != null) {
         float distancia = PVector.dist(this.posicio, this.posicioJugador);
         if (distancia < 250) {
-          PVector direccioCapAJugador = PVector.sub(this.posicioJugador, this.posicio);
-          direccioCapAJugador.normalize();
-          // Desplaçament magnètic gradual
-          this.posicio.x += direccioCapAJugador.x * 0.6f;
-          this.posicio.y += direccioCapAJugador.y * 0.6f;
+          float dx = this.posicioJugador.x - this.posicio.x;
+          float dy = this.posicioJugador.y - this.posicio.y;
+          float dLen = (float)Math.sqrt(dx*dx + dy*dy);
+          if (dLen > 0) {
+            this.posicio.x += (dx / dLen) * 0.6f;
+            this.posicio.y += (dy / dLen) * 0.6f;
+          }
         }
       }
       

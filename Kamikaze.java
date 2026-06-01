@@ -28,23 +28,30 @@ public class Kamikaze extends Enemic {
       if (this.animacioExplosio != null) {
         this.animacioExplosio.update();
       }
-      // Deriva cap endavant a la quarta part de la seua velocitat
-      this.posicio.add(PVector.mult(this.vel, 0.25f));
+      // Deriva cap endavant a la quarta part de la seua velocitat (in-place)
+      this.posicio.x += this.vel.x * 0.25f;
+      this.posicio.y += this.vel.y * 0.25f;
       return;
     }
 
-    // Si encara està a la dreta del jugador, corregim la direcció de forma gradual
+    // Si encara està a la dreta del jugador, corregim la direcció de forma gradual (in-place per evitar GC)
     if (this.posicioJugador != null && this.posicio.x > this.posicioJugador.x) {
-      PVector objectiu = this.posicioJugador.copy();
-      PVector direccioDesitjada = objectiu.sub(this.posicio);
-      direccioDesitjada.normalize();
+      float dx = this.posicioJugador.x - this.posicio.x;
+      float dy = this.posicioJugador.y - this.posicio.y;
+      float dLen = (float)Math.sqrt(dx*dx + dy*dy);
+      if (dLen > 0) {
+        dx /= dLen;
+        dy /= dLen;
+      }
       
-      // Interpolació suau (lerp) per a un gir progressiu i dinàmic
-      this.direccio.lerp(direccioDesitjada, 0.05f);
+      // Interpolació suau (lerp) per a un gir progressiu i dinàmic sobre les coordenades
+      this.direccio.x = PApplet.lerp(this.direccio.x, dx, 0.05f);
+      this.direccio.y = PApplet.lerp(this.direccio.y, dy, 0.05f);
       this.direccio.normalize();
       
-      // Actualitzem la velocitat en base a la nova direcció
-      this.vel = this.direccio.copy().mult(this.velocitat);
+      // Actualitzem la velocitat en base a la nova direcció (in-place)
+      this.vel.x = this.direccio.x * this.velocitat;
+      this.vel.y = this.direccio.y * this.velocitat;
     }
     
     // Apliquem el moviment

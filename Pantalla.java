@@ -20,6 +20,7 @@ public class Pantalla {
   private float[] starX = new float[100];
   private float[] starY = new float[100];
   private float[] starSpeed = new float[100];
+  private float[] starAlpha = new float[100]; // NOU: Pre-calculat per a optimització
 
   public Pantalla(PApplet app, int id, String titol, String rutaFons, int objPunts, int velSpawn, int numMeteorits, int durada) {
     this.app = app;
@@ -38,6 +39,7 @@ public class Pantalla {
       starX[i] = app.random(app.width);
       starY[i] = app.random(app.height);
       starSpeed[i] = app.random(1f, 4f); // Velocitats/tamanys aleatoris entre 1 i 4
+      starAlpha[i] = app.map(starSpeed[i], 1f, 4f, 100f, 255f); // NOU: Pre-calculat
     }
   }
 
@@ -82,7 +84,7 @@ public class Pantalla {
     app.pushStyle();
     app.noStroke();
     for (int i = 0; i < 100; i++) {
-      app.fill(255, 255, 255, app.map(starSpeed[i], 1, 4, 100, 255)); // Les més ràpides brillen més
+      app.fill(255, 255, 255, starAlpha[i]); // Les més ràpides brillen més (Pre-calculat)
       app.ellipse(starX[i], starY[i], starSpeed[i], starSpeed[i]);
       
       starX[i] -= starSpeed[i] * 1.5f; // Es mouen cap a l'esquerra segons la seua velocitat

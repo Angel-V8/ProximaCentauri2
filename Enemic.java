@@ -19,8 +19,9 @@ public class Enemic implements Entitat {
       if (this.animacioExplosio != null) {
         this.animacioExplosio.update();
       }
-      // Frena a la quarta part de la seua velocitat
-      this.posicio.sub(PVector.mult(this.vel, 0.25f));
+      // Frena a la quarta part de la seua velocitat (in-place per evitar instanciar PVector)
+      this.posicio.x -= this.vel.x * 0.25f;
+      this.posicio.y -= this.vel.y * 0.25f;
     } else {
       this.posicio.sub(this.vel);
     }
