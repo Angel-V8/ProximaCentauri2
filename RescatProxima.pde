@@ -715,28 +715,28 @@ public void actualitzarVisibilitatMenus() {
   if (estatJoc == -1) {
     if (enConfiguracio) {
       // Ocultar Principal
-      cp5.get("btnJugar").setVisible(false);
-      cp5.get("btnConfig").setVisible(false);
-      cp5.get("desplegableIdioma").setVisible(false);
+      cp5.get("btnJugar").hide();
+      cp5.get("btnConfig").hide();
+      cp5.get("desplegableIdioma").hide();
       
       // Mostrar Config
-      cp5.get("sliderVida").setVisible(true);
-      cp5.get("sliderVelocitat").setVisible(true);
-      cp5.get("sliderEscut").setVisible(true);
-      cp5.get("btnBoss").setVisible(true);
-      cp5.get("btnTornar").setVisible(true);
+      cp5.get("sliderVida").show();
+      cp5.get("sliderVelocitat").show();
+      cp5.get("sliderEscut").show();
+      cp5.get("btnBoss").show();
+      cp5.get("btnTornar").show();
     } else {
       // Mostrar Principal
-      cp5.get("btnJugar").setVisible(true);
-      cp5.get("btnConfig").setVisible(true);
-      cp5.get("desplegableIdioma").setVisible(true);
+      cp5.get("btnJugar").show();
+      cp5.get("btnConfig").show();
+      cp5.get("desplegableIdioma").show();
       
       // Ocultar Config
-      cp5.get("sliderVida").setVisible(false);
-      cp5.get("sliderVelocitat").setVisible(false);
-      cp5.get("sliderEscut").setVisible(false);
-      cp5.get("btnBoss").setVisible(false);
-      cp5.get("btnTornar").setVisible(false);
+      cp5.get("sliderVida").hide();
+      cp5.get("sliderVelocitat").hide();
+      cp5.get("sliderEscut").hide();
+      cp5.get("btnBoss").hide();
+      cp5.get("btnTornar").hide();
     }
   } else {
     cp5.hide();
