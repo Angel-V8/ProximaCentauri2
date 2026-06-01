@@ -24,16 +24,21 @@ public class Dispar {
     }
   }
 
-  // NOU: Constructor dirigit (apunta directament cap a un objectiu)
+  // NOU: Constructor dirigit (apunta un poc desviat per no tindre 100% de punteria)
   public Dispar(PVector origen, PVector objectiu, boolean esEnemic) {
     this.posicio = origen.copy();
     this.esEnemic = esEnemic;
     this.tamany = 8;
 
     if (esEnemic) {
-      float velocitatBala = 6.0f;
-      // Calculem el vector direcció cap a l'objectiu
-      PVector dir = PVector.sub(objectiu, origen);
+      float velocitatBala = 5.0f; // Un poc més lenta per poder esquivar-la (abans 6.0f)
+      
+      // Afegim una desviació aleatòria de punteria de fins a +/- 40 píxels
+      PVector targetAmbDesvio = objectiu.copy();
+      targetAmbDesvio.y += (float)(Math.random() * 80) - 40;
+      
+      // Calculem el vector direcció cap a l'objectiu desviat
+      PVector dir = PVector.sub(targetAmbDesvio, origen);
       dir.normalize();
       
       this.velocitatX = dir.x * velocitatBala;
