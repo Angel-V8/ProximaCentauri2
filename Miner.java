@@ -14,7 +14,7 @@ public class Miner extends Enemic {
     this.velocitat = 1.5f;
     this.vel = this.direccio.copy().mult(velocitat);
     this.temporizador = 0;
-    this.cooldown = 100; // Ara posa mines més ràpid (abans 150)
+    this.cooldown = 60; // NOU: Posa mines molt més ràpid (abans 100) per a ser més molest
     this.posicioJugador = posicioJugador;
     this.tamany = 65; // NOU: Increment de tamany a 65 px per a reflectir que és un enemic pesat
   }

@@ -20,7 +20,7 @@ public class Mina {
   // METODES
   public void actualitzar() {
     if (explotant) {
-      radiExplosio += 5; // L'explosió es fa gran (física de dany expansiu)
+      radiExplosio += 10; // NOU: L'ona expansiva creix el doble de ràpid (abans 5)
       if (this.animacioExplosio != null) {
         this.animacioExplosio.update();
       }
@@ -50,7 +50,8 @@ public class Mina {
         this.animacioExplosio.setLoop(false);
         this.animacioExplosio.setDelay(2);
       }
-      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 32.0f);
+      // NOU: Dibuixem l'explosió el doble de gran per a coincidir amb el seu gran radi expansiu (escala /16.0f en comptes de /32.0f)
+      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 16.0f);
     } else {
       if (this.animacio == null) {
         // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
@@ -71,9 +72,9 @@ public class Mina {
     // Xicoteta velocitat aleatòria per a que deriven lentament com si suraren
     this.velocitatX = (float)Math.random() * 1.5f - 0.2f; 
     this.velocitatY = (float)Math.random() * 1.5f - 0.75f; 
-    this.tamany = 50; // Mida original de la mina
+    this.tamany = 75; // NOU: Mida de la mina incrementada a 75 px (més gran i amenaçadora)
     this.actiu = true;
-    this.vida = 50; // NOU: Increment de vida a 50 (mateixa que els meteorits, calen 5 tirs per a detonar-la)
+    this.vida = 100; // NOU: Més vida per a la mina (100 HP, calen 10 tirs de jugador per detonar-la)
     this.explotant = false;
     this.radiExplosio = this.tamany;
     this.haDanyatJugador = false;
