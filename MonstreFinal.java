@@ -18,8 +18,9 @@ public class MonstreFinal {
   private boolean destruint;
   private Animation animacioExplosio;
 
-  // ANIMACIÓ DE GOKU
+  // ANIMACIÓ DE GOKU I VECTOR ZERO
   private Animation animacio;
+  private PVector posicioZero; // NOU: PVector(0,0) per a renderitzar amb translat/scale in-place
 
   // CONSTRUCTORS
 
@@ -36,6 +37,7 @@ public class MonstreFinal {
     this.cooldownDispar = 60; // Ataca cada 1 segon
     this.angleOscilacio = 0;
     this.destruint = false;
+    this.posicioZero = new PVector(0, 0);
   }
 
   // Constructor parametritzat
@@ -92,9 +94,15 @@ public class MonstreFinal {
       this.animacio.setDelay(8); // Velocitat d'animació
     }
 
-    // Dibuix de Goku mirant cap a l'esquerra (-1 en la direcció)
+    // NOU RENDER: Evitem passar dir = -1 directament a la classe Animation (ja que la seua
+    // implementació interna dibuixa en coordenades negatives causant invisibilitat).
+    // En el seu lloc, girem tota la matriu al voltant de la posició del boss.
+    app.pushMatrix();
+    app.translate(this.posicio.x, this.posicio.y);
+    app.scale(-1, 1); // Voltem horitzontalment per fer que miri a l'esquerra (cap al jugador)
     float escala = (float)this.ample / 64.0f;
-    this.animacio.display(this.posicio, -1, escala);
+    this.animacio.display(this.posicioZero, 1, escala); // Passem posició (0,0) i dir = 1
+    app.popMatrix();
 
     // -------------------------------------------------------------
     // DIBUIX DE LA BARRA DE VIDA DEL JEFE (HUD INFERIOR PANTALLA)
