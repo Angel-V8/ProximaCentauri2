@@ -17,6 +17,7 @@ public class Mina {
   private Animation animacio; // Animació del parpadeig de la mina
   private Animation animacioExplosio; // Animació de l'explosió de la mina
   private int vidaMaxima; // NOU: Registrar la vida màxima per a la barra de vida
+  private PVector posicioJugador; // Referència a la posició del jugador per a l'atracció magnètica
 
   // METODES
   public void actualitzar() {
@@ -31,6 +32,18 @@ public class Mina {
     } else {
       this.posicio.x -= velocitatX;
       this.posicio.y += velocitatY; 
+
+      // NOU: Atracció magnètica si el jugador està a prop (250px)
+      if (this.posicioJugador != null) {
+        float distancia = PVector.dist(this.posicio, this.posicioJugador);
+        if (distancia < 250) {
+          PVector direccioCapAJugador = PVector.sub(this.posicioJugador, this.posicio);
+          direccioCapAJugador.normalize();
+          // Desplaçament magnètic gradual
+          this.posicio.x += direccioCapAJugador.x * 0.6f;
+          this.posicio.y += direccioCapAJugador.y * 0.6f;
+        }
+      }
       
       // Evitem que isquen per dalt i per baix fent-les rebotar!
       if (this.posicio.y < 30 || this.posicio.y > 570) {
@@ -99,6 +112,12 @@ public class Mina {
     this();
     // Copiem la posicio de qui dispara nau o enemic
     this.posicio = origen.copy();
+  }
+
+  // NOU: Constructor parametritzat que rep la posició del jugador per a l'atracció magnètica
+  public Mina(PVector origen, PVector posicioJugador) {
+    this(origen);
+    this.posicioJugador = posicioJugador;
   }
 
   public PVector getPosicio() {

@@ -149,7 +149,7 @@ void draw() {
 
       if (m.isExplotant()) {
         // Dany de l'explosió de la mina al jugador (només 1 vegada per mina)
-        if (!m.haDanyatJugador() && Utils.hiHaColisio(jugador.getPosicio(), jugador.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
+        if (!m.haDanyatJugador() && Utils.hiHaColisio(jugador.getPosicio(), jugador.getTamany(), m.getPosicio(), m.getRadiExplosio() * 2)) {
           jugador.rebreDany(20);
           m.setHaDanyatJugador(true);
         }
@@ -157,7 +157,7 @@ void draw() {
         // L'explosió danya enemics propers
         for (int j = llistaEnemics.size() - 1; j >= 0; j--) {
           Enemic e = llistaEnemics.get(j);
-          if (!e.isDestruint() && Utils.hiHaColisio(e.getPosicio(), e.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
+          if (!e.isDestruint() && Utils.hiHaColisio(e.getPosicio(), e.getTamany(), m.getPosicio(), m.getRadiExplosio() * 2)) {
             e.rebreDany(30); // Dany pesat per l'ona expansiva
             if (e.estaDestruit()) {
               marcador.incrementScore(100);
@@ -168,7 +168,7 @@ void draw() {
         // L'explosió danya meteorits propers
         for (int j = llistaMeteorits.size() - 1; j >= 0; j--) {
           Meteorit met = llistaMeteorits.get(j);
-          if (!met.isDestruint() && Utils.hiHaColisio(met.getPosicio(), met.getTamany(), m.getPosicio(), m.getRadiExplosio())) {
+          if (!met.isDestruint() && Utils.hiHaColisio(met.getPosicio(), met.getTamany(), m.getPosicio(), m.getRadiExplosio() * 2)) {
             met.rebreDany(30);
             if (met.estaDestruit()) {
               marcador.incrementScore(20);
