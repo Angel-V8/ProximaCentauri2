@@ -4,10 +4,12 @@
         <titol>RESCAT A PROXIMA CENTAURI</titol>
         <iniciar>INICIAR</iniciar>
         <config>CONFIGURACIO</config>
+        <boss>JUGAR BOSS</boss>
     </cat>
     <eng>
         <titol>RESCUE AT PROXIMA CENTAURI</titol>
         <iniciar>START GAME</iniciar>
         <config>SETTINGS</config>
+        <boss>PLAY BOSS</boss>
     </eng>
 </idiomes>

@@ -8,7 +8,7 @@ ControlP5 cp5;
 PImage fonsInici;
 Pantalla nivellActual;
 int contadorFramesNivell = 0;
-int numeroNivell = 10; // NOU: Comença directament al nivell 10 (Boss)
+int numeroNivell = 1; // Comença al nivell 1
 int estatJoc = -1;
 int tempsTransicio = 0;
 
@@ -65,8 +65,14 @@ void setup() {
     .setSize(200, 50)
     .plugTo(this, "obrirConfiguracio");
 
-  cp5.addScrollableList("desplegableIdioma")
+  cp5.addButton("btnBoss")
+    .setLabel("JUGAR BOSS")
     .setPosition(width/2 - 100, height/2 + 120)
+    .setSize(200, 50)
+    .plugTo(this, "iniciarBoss");
+
+  cp5.addScrollableList("desplegableIdioma")
+    .setPosition(width/2 - 100, height/2 + 180)
     .setSize(200, 100)
     .setBarHeight(40)
     .setItemHeight(40)
@@ -577,7 +583,18 @@ public void iniciarJoc() {
   marcador.resetScore();
   jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
   estatJoc = 0;
-  numeroNivell = 10; // Forçat a 10 per començar directament al Monstre Final
+  numeroNivell = 1; // Comença des del nivell 1
+  carregarNivell(numeroNivell);
+}
+
+public void iniciarBoss() {
+  cp5.hide();
+  carregarConfiguracio();
+  jugador.resetJugador();
+  marcador.resetScore();
+  jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
+  estatJoc = 0;
+  numeroNivell = 10; // Comença directament al nivell del boss
   carregarNivell(numeroNivell);
 }
 
@@ -597,10 +614,14 @@ void aplicarIdioma() {
     textTitol = xmlIdioma.getChild("titol").getContent();
     String textIniciar = xmlIdioma.getChild("iniciar").getContent();
     String textConfig = xmlIdioma.getChild("config").getContent();
+    String textBoss = xmlIdioma.getChild("boss") != null ? xmlIdioma.getChild("boss").getContent() : "JUGAR BOSS";
 
     if (cp5 != null) {
       cp5.get(controlP5.Button.class, "btnJugar").setLabel(textIniciar);
       cp5.get(controlP5.Button.class, "btnConfig").setLabel(textConfig);
+      if (cp5.get(controlP5.Button.class, "btnBoss") != null) {
+        cp5.get(controlP5.Button.class, "btnBoss").setLabel(textBoss);
+      }
     }
   }
   catch (Exception e) {

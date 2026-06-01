@@ -40,8 +40,8 @@ public class MonstreFinal {
   // Constructor per defecte
   public MonstreFinal() {
     this.posicio = new PVector(900, 300); // Neix fora de pantalla a la dreta
-    this.vida = 800; // Salut inicial
-    this.vidaMaxima = 800;
+    this.vida = 1600; // Salut inicial doblada (1600)
+    this.vidaMaxima = 1600;
     this.ample = 120; // Mida de Goku en pantalla (120 píxels)
     this.alt = 120;
     this.actiu = true;
@@ -67,7 +67,7 @@ public class MonstreFinal {
   // Constructor parametritzat
   public MonstreFinal(int nivell) {
     this();
-    this.vida = 800 + (nivell - 10) * 200;
+    this.vida = 1600 + (nivell - 10) * 400; // Salut doblada per a qualsevol nivell
     this.vidaMaxima = this.vida;
   }
 
