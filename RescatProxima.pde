@@ -569,13 +569,13 @@ void generarMeteorits() {
 }
 
 void keyPressed() {
-  if (keyCode == UP)    jugador.setMoureAmunt(true);
-  if (keyCode == DOWN)  jugador.setMoureAvall(true);
-  if (keyCode == LEFT)  jugador.setMoureEsquerra(true);
-  if (keyCode == RIGHT) jugador.setMoureDreta(true);
+  if (keyCode == UP || key == 'w' || key == 'W')    jugador.setMoureAmunt(true);
+  if (keyCode == DOWN || key == 's' || key == 'S')  jugador.setMoureAvall(true);
+  if (keyCode == LEFT || key == 'a' || key == 'A')  jugador.setMoureEsquerra(true);
+  if (keyCode == RIGHT || key == 'd' || key == 'D') jugador.setMoureDreta(true);
 
   // Assegurem que l'espai funciona comprovant explícitament el keyCode 32
-  if (key == ' ' || keyCode == 32 || key == 'x' || key == 'X') jugador.setDisparant(true);
+  if (key == ' ' || keyCode == 32 || key == 'x' || key == 'X' || key == 'l' || key == 'L') jugador.setDisparant(true);
 
   // Si estem morts o hem guanyat i polsem R, reiniciem el joc anant al menú
   if ((estatJoc == 2 || estatJoc == 3) && (key == 'r' || key == 'R')) {
@@ -590,12 +590,12 @@ void keyPressed() {
 }
 
 void keyReleased() {
-  if (keyCode == UP)    jugador.setMoureAmunt(false);
-  if (keyCode == DOWN)  jugador.setMoureAvall(false);
-  if (keyCode == LEFT)  jugador.setMoureEsquerra(false);
-  if (keyCode == RIGHT) jugador.setMoureDreta(false);
+  if (keyCode == UP || key == 'w' || key == 'W')    jugador.setMoureAmunt(false);
+  if (keyCode == DOWN || key == 's' || key == 'S')  jugador.setMoureAvall(false);
+  if (keyCode == LEFT || key == 'a' || key == 'A')  jugador.setMoureEsquerra(false);
+  if (keyCode == RIGHT || key == 'd' || key == 'D') jugador.setMoureDreta(false);
 
-  if (key == ' ' || keyCode == 32 || key == 'x' || key == 'X') jugador.setDisparant(false);
+  if (key == ' ' || keyCode == 32 || key == 'x' || key == 'X' || key == 'l' || key == 'L') jugador.setDisparant(false);
 }
 
 void carregarNivell(int num) {
