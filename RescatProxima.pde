@@ -570,13 +570,13 @@ void generarEnemics() {
     float r = random(1);
 
     if (numeroNivell == 3) {
-      // Nivell 3: Només Kamikazes i Interceptors. Freqüència de Kamikazes incrementada (70%)
+      // Sense miners en aquest nivell
       tipusEnemic = r < 0.7f ? 0 : 1;
     } else if (numeroNivell == 6) {
-      // Nivell 6: Esquadró d'assalt ràpid, majoria de Kamikazes (80%) i algun Interceptor
+      // Majoria de Kamikazes i algun Interceptor
       tipusEnemic = r < 0.8f ? 0 : 1;
     } else {
-      // Freqüència de Kamikazes incrementada en general (50% Kamikazes, 25% Interceptors, 25% Miners)
+      // 50% Kamikazes, 25% Interceptors, 25% Miners
       if (r < 0.5f) {
         tipusEnemic = 0;
       } else if (r < 0.75f) {
@@ -717,12 +717,17 @@ void carregarNivell(int num) {
   }
   intervalSpawn = nivellActual.getVelocitatSpawn();
 
-  // Pre-calculem els intervals de frames per optimització
+  // Pre-calculem els intervals de frames
   framesIntervalSpawn = (intervalSpawn > 0) ? (int)((intervalSpawn / 1000.0f) * 60) : 0;
   if (framesIntervalSpawn <= 0 && intervalSpawn > 0) framesIntervalSpawn = 60;
 
   int freqMet = nivellActual.getNumMeteorits();
   framesIntervalMeteorits = (freqMet > 0) ? (60 / freqMet) : 0;
+
+  // Guardat automàtic al començar un nivell (excepte el primer)
+  if (num > 1) {
+    guardarPartida();
+  }
 }
 
 public void iniciarJoc() {

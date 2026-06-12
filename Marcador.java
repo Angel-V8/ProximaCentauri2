@@ -77,15 +77,15 @@ public class Marcador {
    * El marcador es mostra en forma de taula com s'indica a l'inici del fitxer.
    */
   public void mostra () {
-    // Obtenir dinàmicament dades del jugador a través de la instància de RescatProxima si és possible
+    // Obtenir dades del jugador
     RescatProxima game = (RescatProxima) this.app;
     if (game != null && game.jugador != null) {
       this.puntsA = game.jugador.getVida();
       this.puntsB = game.jugador.getEscut();
-      // El temps del booster en NauPlayer és en frames. El convertim a milisegons (a 60 FPS, 1 frame = ~16.6ms)
+      // Convertim frames a milisegons (60 FPS)
       this.currentCountDown = (int)(game.jugador.getTempsDobleDispar() * (1000.0f / 60.0f));
       
-      // Obtenir etiquetes de l'idioma
+      // Etiquetes segons l'idioma
       this.lblPuntsA = game.getTraduccio("vida");
       this.lblPuntsB = game.getTraduccio("escut");
       this.lblExtra  = game.getTraduccio("booster");
@@ -95,13 +95,13 @@ public class Marcador {
     app.pushMatrix();
       app.translate(this.position.x, this.position.y);
 
-      // Fons translúcid blau espaiat premium amb contorn cian
+      // Fons i contorn
       app.fill(10, 15, 30, 200);
       app.stroke(0, 255, 255, 180);
       app.strokeWeight(2);
-      app.rect(0, 0, this.ample, this.alt+25, 8); // Cantonades lleugerament arrodonides per estil premium
+      app.rect(0, 0, this.ample, this.alt+25, 8);
 
-      // Dibuixar el temps de la partida al capçal
+      // Temps de la partida
       app.textSize(18);
       app.fill(255);
       app.textAlign(PApplet.CENTER, PApplet.CENTER);
@@ -111,19 +111,19 @@ public class Marcador {
       app.stroke(0, 255, 255, 100);
       app.line(0, 30, this.ample, 30);
 
-      // Etiquetes estructurals de la taula
+      // Etiquetes de la taula
       app.textSize(12);
       app.fill(0, 255, 255);
       app.text(lblPuntsA, this.ample/4, 42);
       app.text(lblPuntsB, 3*this.ample/4, 42);
 
-      // Línies estructurals
+      // Línies de la taula
       app.line(0, 50, this.ample, 50);
       app.line(this.ample/2, 30, this.ample/2, 70);
 
-      // Dibuixar valor HP (puntsA) amb color dinàmic segons salut
+      // Valor HP (puntsA) amb color dinàmic
       if (this.puntsA > 50) {
-        app.fill(0, 255, 128); // Verd neó
+        app.fill(0, 255, 128);
       } else if (this.puntsA > 25) {
         app.fill(255, 200, 0); // Groc
       } else {
@@ -132,36 +132,36 @@ public class Marcador {
       app.textSize(15);
       app.text(this.puntsA, this.ample/4, 62);
 
-      // Dibuixar valor SHIELD (puntsB) en blau elèctric / cian
+      // Valor SHIELD (puntsB)
       app.fill(0, 220, 255);
       app.text(this.puntsB, 3*this.ample/4, 62);
 
-      // Línies estructurals inferiors de la taula
+      // Línies inferiors de la taula
       app.stroke(0, 255, 255, 100);
       app.line(0, 70, this.ample, 70);
       app.line(0, 70, 0, 90);
       app.line(this.ample, 70, this.ample, 90);
       app.line(0, 90, this.ample, 90);
 
-      // Etiqueta BOOSTER (Extra) a l'esquerra
+      // Etiqueta BOOSTER
       app.textSize(11);
       app.fill(0, 255, 255);
       app.text(this.lblExtra, this.ample/4, 82);
 
-      // Dibuixar valor del compte enrere (Booster doble dispar)
+      // Valor del compte enrere del booster
       String strBooster = "OFF";
       if (this.currentCountDown > 0) {
-        app.fill(255, 215, 0); // Daurat si està actiu
+        app.fill(255, 215, 0);
         strBooster = this.currentCountDown/1000 + ":" + app.nf(this.currentCountDown%1000, 3, 0);
       } else {
-        app.fill(150); // Gris si està inactiu
+        app.fill(150);
       }
       app.text(strBooster, 3*this.ample/4, 82);
 
-      // Línia per sobre del score
+      // Línia sobre el score
       app.line(0, 95, this.ample, 95);
 
-      // Puntuació Score centrada a sota
+      // Puntuació
       app.textSize(14);
       app.fill(255);
       app.text("SCORE: " + this.score, this.ample/2, 107);

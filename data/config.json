@@ -1,6 +1,6 @@
 {
-  "recordPunts": 3300,
-  "mostrarFPS": true,
+  "dificultat": 0,
   "desactivarParallax": false,
-  "dificultat": 0
+  "mostrarFPS": false,
+  "recordPunts": 0
 }

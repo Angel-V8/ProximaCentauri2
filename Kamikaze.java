@@ -9,7 +9,7 @@ public class Kamikaze extends Enemic {
   public Kamikaze(PVector posicioJugador) {
     super(); // Açò el fa nàixer en X=850 i Y=aleatòria
     
-    this.vida = 30; // El kamikaze té 3 de vida, mor de 3 tirs
+    this.vida = 30; // Mor de 3 tirs
     this.velocitat = 7; // Ràpid, pero esquivable
     this.posicioJugador = posicioJugador; // Guardem la referència per al seguiment dinàmic
     this.tamany = 65; // Mida de la nau kamikaze
