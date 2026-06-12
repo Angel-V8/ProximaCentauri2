@@ -45,6 +45,10 @@ public class Pantalla {
 
   // Mètode per dibuixar el fons i el títol
   public void dibuixarFons() {
+    dibuixarFons(false);
+  }
+
+  public void dibuixarFons(boolean desactivarParallax) {
     // Forcem els modes a CORNER per evitar bugs visuals heretats d'altres objectes (1/4 de pantalla)
     app.imageMode(PApplet.CORNER);
     app.rectMode(PApplet.CORNER);
@@ -69,7 +73,9 @@ public class Pantalla {
         ampleImatge = app.height * proporcio;
       }
   
-      offsetFons -= 0.5f; 
+      if (!desactivarParallax) {
+        offsetFons -= 0.5f; 
+      }
       if (offsetFons <= -ampleImatge) offsetFons += ampleImatge; // Bucle infinit basat en l'ample real
       
       if (this.fons != null) {
@@ -87,8 +93,10 @@ public class Pantalla {
       app.fill(255, 255, 255, starAlpha[i]); // Les més ràpides brillen més (Pre-calculat)
       app.ellipse(starX[i], starY[i], starSpeed[i], starSpeed[i]);
       
-      starX[i] -= starSpeed[i] * 1.5f; // Es mouen cap a l'esquerra segons la seua velocitat
-      if (starX[i] < 0) { starX[i] = app.width; starY[i] = app.random(app.height); } // Reapareixen per la dreta
+      if (!desactivarParallax) {
+        starX[i] -= starSpeed[i] * 1.5f; // Es mouen cap a l'esquerra segons la seua velocitat
+        if (starX[i] < 0) { starX[i] = app.width; starY[i] = app.random(app.height); } // Reapareixen per la dreta
+      }
     }
     app.popStyle();
 

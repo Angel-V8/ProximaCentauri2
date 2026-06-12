@@ -78,54 +78,34 @@ void setup() {
     .close();
 
   // --- CONTROLS DE CONFIGURACIÓ IN-GAME (Ocults per defecte) ---
-  cp5.addSlider("sliderVida")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 135)
-    .setSize(200, 25)
-    .setRange(10, 200)
-    .setValue(configJSON.getInt("vida"))
-    .setColorActive(color(0, 255, 128))
-    .setColorForeground(color(0, 200, 100))
-    .setColorBackground(color(40, 40, 60));
-
-  cp5.addSlider("sliderVelocitat")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 90)
-    .setSize(200, 25)
-    .setRange(1, 15)
-    .setValue(configJSON.getInt("velocitat"))
-    .setColorActive(color(0, 255, 128))
-    .setColorForeground(color(0, 200, 100))
-    .setColorBackground(color(40, 40, 60));
-
-  cp5.addToggle("toggleEscut")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 45)
-    .setSize(60, 25)
-    .setMode(ControlP5.SWITCH)
-    .setState(configJSON.getInt("escut") > 0)
-    .setColorActive(color(0, 255, 128))
-    .setColorForeground(color(0, 200, 100))
-    .setColorBackground(color(40, 40, 60));
-
-  cp5.addToggle("toggleDobleDispar")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2)
-    .setSize(60, 25)
-    .setMode(ControlP5.SWITCH)
-    .setState(configJSON.getBoolean("dobleDispar"))
-    .setColorActive(color(0, 255, 128))
-    .setColorForeground(color(0, 200, 100))
-    .setColorBackground(color(40, 40, 60));
-
   cp5.addToggle("toggleDificultat")
     .setLabel("")
-    .setPosition(width/2 - 50, height/2 + 45)
+    .setPosition(width/2 - 50, height/2 - 90)
     .setSize(60, 25)
     .setMode(ControlP5.SWITCH)
     .setState(configJSON.getInt("dificultat") == 1)
     .setColorActive(color(255, 50, 80))
     .setColorForeground(color(180, 30, 50))
+    .setColorBackground(color(40, 40, 60));
+
+  cp5.addToggle("toggleParallax")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2 - 30)
+    .setSize(60, 25)
+    .setMode(ControlP5.SWITCH)
+    .setState(configJSON.getBoolean("desactivarParallax"))
+    .setColorActive(color(0, 255, 128))
+    .setColorForeground(color(0, 200, 100))
+    .setColorBackground(color(40, 40, 60));
+
+  cp5.addToggle("toggleFPS")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2 + 30)
+    .setSize(60, 25)
+    .setMode(ControlP5.SWITCH)
+    .setState(configJSON.getBoolean("mostrarFPS"))
+    .setColorActive(color(0, 255, 128))
+    .setColorForeground(color(0, 200, 100))
     .setColorBackground(color(40, 40, 60));
 
   cp5.addButton("btnBoss")
@@ -179,30 +159,28 @@ void draw() {
       textSize(15);
       textAlign(RIGHT, CENTER);
       float labelX = width/2 - 70; // 330 (20px a l'esquerra del control)
-      text(idiomaActual.equals("cat") ? "VIDA:" : "HEALTH:", labelX, height/2 - 122.5f);
-      text(idiomaActual.equals("cat") ? "VELOCITAT:" : "SPEED:", labelX, height/2 - 77.5f);
-      text(idiomaActual.equals("cat") ? "ESCUT INICIAL:" : "INITIAL SHIELD:", labelX, height/2 - 32.5f);
-      text(idiomaActual.equals("cat") ? "DOBLE DISPAR:" : "DOUBLE SHOT:", labelX, height/2 + 12.5f);
-      text(idiomaActual.equals("cat") ? "DIFICULTAT:" : "DIFFICULTY:", labelX, height/2 + 57.5f);
+      text(idiomaActual.equals("cat") ? "DIFICULTAT:" : "DIFFICULTY:", labelX, height/2 - 77.5f);
+      text(idiomaActual.equals("cat") ? "DESACTIVAR PARALLAX:" : "DISABLE PARALLAX:", labelX, height/2 - 17.5f);
+      text(idiomaActual.equals("cat") ? "MOSTRAR FPS:" : "SHOW FPS:", labelX, height/2 + 42.5f);
 
       // Estat dels toggles escrit a mà
       textAlign(LEFT, CENTER);
       textSize(14);
       
-      // Escut
-      boolean escutActiu = cp5.get(Toggle.class, "toggleEscut").getState();
-      fill(escutActiu ? color(0, 255, 128) : color(150));
-      text(escutActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 - 32.5f);
-      
-      // Doble Dispar
-      boolean dobleActiu = cp5.get(Toggle.class, "toggleDobleDispar").getState();
-      fill(dobleActiu ? color(0, 255, 128) : color(150));
-      text(dobleActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 + 12.5f);
-      
       // Dificultat
       boolean difDificil = cp5.get(Toggle.class, "toggleDificultat").getState();
       fill(difDificil ? color(255, 50, 80) : color(0, 220, 255));
-      text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : "HARD") : (idiomaActual.equals("cat") ? "NORMAL" : "NORMAL"), width/2 + 30, height/2 + 57.5f);
+      text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : "HARD") : (idiomaActual.equals("cat") ? "NORMAL" : "NORMAL"), width/2 + 30, height/2 - 77.5f);
+      
+      // Parallax
+      boolean parallaxDesactivat = cp5.get(Toggle.class, "toggleParallax").getState();
+      fill(parallaxDesactivat ? color(255, 50, 80) : color(0, 255, 128));
+      text(parallaxDesactivat ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 - 17.5f);
+      
+      // FPS
+      boolean fpsActiu = cp5.get(Toggle.class, "toggleFPS").getState();
+      fill(fpsActiu ? color(0, 255, 128) : color(150));
+      text(fpsActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 + 42.5f);
     } else {
       // Títol del joc normal
       fill(0, 255, 0);
@@ -231,12 +209,21 @@ void draw() {
     imageMode(CORNER);
     rectMode(CORNER);
     textAlign(LEFT);
-    nivellActual.dibuixarFons();
+    nivellActual.dibuixarFons(configJSON.getBoolean("desactivarParallax"));
 
     generarEnemics();
     generarBoosters();
     marcador.actualitza(contadorFramesNivell);
     marcador.mostra(jugador.getVida());
+
+    if (configJSON.getBoolean("mostrarFPS")) {
+      pushStyle();
+      fill(255, 255, 0); // Groc
+      textSize(16);
+      textAlign(RIGHT);
+      text("FPS: " + Math.round(frameRate), width - 20, 75);
+      popStyle();
+    }
 
     jugador.actualitzar();
     jugador.mostrar(this);
@@ -281,7 +268,7 @@ void draw() {
             e.rebreDany(30); // Dany pesat per l'ona expansiva
             m.afegirDanyat(e);
             if (e.estaDestruit()) {
-              marcador.incrementScore(100);
+              incrementarPunts(100);
             }
           }
         }
@@ -293,7 +280,7 @@ void draw() {
             met.rebreDany(30);
             m.afegirDanyat(met);
             if (met.estaDestruit()) {
-              marcador.incrementScore(20);
+              incrementarPunts(20);
             }
           }
         }
@@ -343,7 +330,7 @@ void draw() {
           jugador.afegirEscut();
         }
 
-        marcador.incrementScore(50);
+        incrementarPunts(50);
         llistaBoosters.remove(i);
       }
     }
@@ -374,7 +361,7 @@ void draw() {
           jugador.rebreDany(15);
           e.rebreDany(100);
           if (e.estaDestruit()) {
-            marcador.incrementScore(50);
+            incrementarPunts(50);
           }
         }
       }
@@ -431,7 +418,7 @@ void draw() {
           e.rebreDany(10);
           balaHaXocat = true;
           if (e.estaDestruit()) {
-            marcador.incrementScore(100);
+            incrementarPunts(100);
           }
           break;
         }
@@ -445,7 +432,7 @@ void draw() {
             m.rebreDany(10);
             balaHaXocat = true;
             if (m.estaDestruit()) {
-              marcador.incrementScore(20);
+              incrementarPunts(20);
             }
             break;
           }
@@ -470,7 +457,7 @@ void draw() {
           boss.rebreDany(10);
           balaHaXocat = true;
           if (boss.estaDestruit()) {
-            marcador.incrementScore(2000); // Gran bonificació
+            incrementarPunts(2000); // Gran bonificació
           }
         }
       }
@@ -490,7 +477,7 @@ void draw() {
     // ==========================================
     // ESTAT 1: TRANSICIÓ DE NIVELL REDISSENYADA
     // ==========================================
-    nivellActual.dibuixarFons();
+    nivellActual.dibuixarFons(configJSON.getBoolean("desactivarParallax"));
     fill(0, 0, 40, 210); // Fons blavós fosc i transparent per donar profunditat
     rect(0, 0, width, height);
 
@@ -524,7 +511,7 @@ void draw() {
     // ==========================================
     // ESTAT 2: GAME OVER REDISSENYAT
     // ==========================================
-    nivellActual.dibuixarFons();
+    nivellActual.dibuixarFons(configJSON.getBoolean("desactivarParallax"));
     fill(15, 0, 0, 220); // Fons molt fosc, tocant a negre per a major dramatisme
     rect(0, 0, width, height);
 
@@ -543,7 +530,7 @@ void draw() {
       // ==========================================
       // ESTAT 3: PANTALLA DE VICTÒRIA (JOC COMPLETAT)
       // ==========================================
-      nivellActual.dibuixarFons();
+      nivellActual.dibuixarFons(configJSON.getBoolean("desactivarParallax"));
       fill(0, 40, 20, 200); // Fons verdós transparent molt premium
       rect(0, 0, width, height);
 
@@ -639,7 +626,7 @@ void keyPressed() {
     cp5.show();
 
     carregarConfiguracio();
-    jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
+    jugador.aplicarConfiguracio(100, 5, 0);
   }
 }
 
@@ -712,15 +699,7 @@ public void iniciarJoc() {
   jugador.resetJugador();
   marcador.resetScore();
   
-  int vida = configJSON.getInt("vida");
-  int vel = configJSON.getInt("velocitat");
-  int escut = configJSON.getInt("escut");
-  boolean dobleDispar = configJSON.getBoolean("dobleDispar");
-  
-  jugador.aplicarConfiguracio(vida, vel, escut);
-  if (dobleDispar) {
-    jugador.activarDobleDispar(999999);
-  }
+  jugador.aplicarConfiguracio(100, 5, 0);
   
   estatJoc = 0;
   numeroNivell = 1; // Comença des del nivell 1
@@ -734,15 +713,7 @@ public void iniciarBoss() {
   jugador.resetJugador();
   marcador.resetScore();
   
-  int vida = configJSON.getInt("vida");
-  int vel = configJSON.getInt("velocitat");
-  int escut = configJSON.getInt("escut");
-  boolean dobleDispar = configJSON.getBoolean("dobleDispar");
-  
-  jugador.aplicarConfiguracio(vida, vel, escut);
-  if (dobleDispar) {
-    jugador.activarDobleDispar(999999);
-  }
+  jugador.aplicarConfiguracio(100, 5, 0);
   
   estatJoc = 0;
   numeroNivell = 10; // Comença directament al nivell del boss
@@ -751,43 +722,36 @@ public void iniciarBoss() {
 
 void carregarConfiguracio() {
   configJSON = loadJSONObject("data/config.json");
+  if (configJSON == null) {
+    configJSON = new JSONObject();
+  }
   // Assegurem que existeixen els nous camps amb valors per defecte coherents
   if (!configJSON.hasKey("dificultat")) {
     configJSON.setInt("dificultat", 0); // 0 = Normal, 1 = Dificil
   }
-  if (!configJSON.hasKey("dobleDispar")) {
-    configJSON.setBoolean("dobleDispar", false);
+  if (!configJSON.hasKey("desactivarParallax")) {
+    configJSON.setBoolean("desactivarParallax", false);
+  }
+  if (!configJSON.hasKey("mostrarFPS")) {
+    configJSON.setBoolean("mostrarFPS", false);
   }
 }
 
-// Guarda els sliders i toggles a config.json i els aplica a la nau
+// Guarda els toggles a config.json
 public void desarConfiguracio() {
   if (configJSON == null) {
     configJSON = new JSONObject();
   }
   
-  // Obtenim valors de cp5
-  int vida = (int)cp5.get(Slider.class, "sliderVida").getValue();
-  int velocitat = (int)cp5.get(Slider.class, "sliderVelocitat").getValue();
-  int escut = cp5.get(Toggle.class, "toggleEscut").getState() ? 1 : 0;
-  boolean dobleDispar = cp5.get(Toggle.class, "toggleDobleDispar").getState();
   int dificultat = cp5.get(Toggle.class, "toggleDificultat").getState() ? 1 : 0;
+  boolean desactivarParallax = cp5.get(Toggle.class, "toggleParallax").getState();
+  boolean mostrarFPS = cp5.get(Toggle.class, "toggleFPS").getState();
   
-  configJSON.setInt("vida", vida);
-  configJSON.setInt("velocitat", velocitat);
-  configJSON.setInt("escut", escut);
-  configJSON.setBoolean("dobleDispar", dobleDispar);
   configJSON.setInt("dificultat", dificultat);
+  configJSON.setBoolean("desactivarParallax", desactivarParallax);
+  configJSON.setBoolean("mostrarFPS", mostrarFPS);
   
   saveJSONObject(configJSON, "data/config.json");
-  
-  // Apliquem configuració al jugador a l'instant
-  jugador.aplicarConfiguracio(vida, velocitat, escut);
-  if (dobleDispar) {
-    jugador.activarDobleDispar(999999); // Doble dispar actiu
-  } else {
-    jugador.activarDobleDispar(0);
-  }
 }
 
 public void obrirConfiguracio() {
@@ -810,11 +774,9 @@ public void actualitzarVisibilitatMenus() {
       cp5.get("desplegableIdioma").hide();
       
       // Mostrar Config
-      cp5.get("sliderVida").show();
-      cp5.get("sliderVelocitat").show();
-      cp5.get("toggleEscut").show();
-      cp5.get("toggleDobleDispar").show();
       cp5.get("toggleDificultat").show();
+      cp5.get("toggleParallax").show();
+      cp5.get("toggleFPS").show();
       cp5.get("btnBoss").show();
       cp5.get("btnTornar").show();
     } else {
@@ -824,11 +786,9 @@ public void actualitzarVisibilitatMenus() {
       cp5.get("desplegableIdioma").show();
       
       // Ocultar Config
-      cp5.get("sliderVida").hide();
-      cp5.get("sliderVelocitat").hide();
-      cp5.get("toggleEscut").hide();
-      cp5.get("toggleDobleDispar").hide();
       cp5.get("toggleDificultat").hide();
+      cp5.get("toggleParallax").hide();
+      cp5.get("toggleFPS").hide();
       cp5.get("btnBoss").hide();
       cp5.get("btnTornar").hide();
     }
@@ -868,5 +828,13 @@ public void desplegableIdioma(int n) {
   if (n == 0) idiomaActual = "cat";
   else if (n == 1) idiomaActual = "eng";
   aplicarIdioma();
+}
+
+void incrementarPunts(int valor) {
+  if (configJSON != null && configJSON.getInt("dificultat") == 1) {
+    marcador.incrementScore((int)(valor * 1.5f));
+  } else {
+    marcador.incrementScore(valor);
+  }
 }
 

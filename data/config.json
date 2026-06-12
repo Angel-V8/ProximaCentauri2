@@ -1,5 +1,5 @@
 {
-  "escut": 0,
-  "vida": 100,
-  "velocitat": 5
+  "dificultat": 1,
+  "desactivarParallax": false,
+  "mostrarFPS": false
 }
