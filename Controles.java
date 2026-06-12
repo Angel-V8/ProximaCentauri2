@@ -34,18 +34,19 @@ public class Controles {
       .setSize(200, 45)
       .plugTo(app, "obrirConfiguracio");
 
-    // Reemplaçament del desplegable per dos botons de selecció de llenguatge nets i sense bugs de CP5
-    cp5.addButton("btnIdiomaVal")
-      .setLabel("VALENCIÀ")
+    // Selector de llenguatge en format ScrollableList (desplegable)
+    cp5.addScrollableList("desplegableIdioma")
       .setPosition(app.width/2 - 100, app.height/2 + 115)
-      .setSize(95, 45)
-      .plugTo(app, "seleccionarValencian");
-
-    cp5.addButton("btnIdiomaEng")
-      .setLabel("ENGLISH")
-      .setPosition(app.width/2 + 5, app.height/2 + 115)
-      .setSize(95, 45)
-      .plugTo(app, "seleccionarEnglish");
+      .setSize(200, 135)
+      .setBarHeight(45)
+      .setItemHeight(45)
+      .addItem("VALENCIÀ", 0)
+      .addItem("ENGLISH", 1)
+      .setColorBackground(app.color(40, 40, 60))
+      .setColorForeground(app.color(0, 180, 100))
+      .setColorActive(app.color(0, 240, 140))
+      .close()
+      .plugTo(app, "desplegableIdioma");
 
     // --- CONTROLS DEL MENÚ DE PAUSA ---
     cp5.addButton("btnSeguir")
@@ -121,8 +122,7 @@ public class Controles {
     if (cp5.get("btnNovaPartida") != null) cp5.get("btnNovaPartida").hide();
     if (cp5.get("btnCarregarPartida") != null) cp5.get("btnCarregarPartida").hide();
     if (cp5.get("btnConfig") != null) cp5.get("btnConfig").hide();
-    if (cp5.get("btnIdiomaVal") != null) cp5.get("btnIdiomaVal").hide();
-    if (cp5.get("btnIdiomaEng") != null) cp5.get("btnIdiomaEng").hide();
+    if (cp5.get("desplegableIdioma") != null) cp5.get("desplegableIdioma").hide();
     if (cp5.get("toggleDificultat") != null) cp5.get("toggleDificultat").hide();
     if (cp5.get("toggleParallax") != null) cp5.get("toggleParallax").hide();
     if (cp5.get("toggleFPS") != null) cp5.get("toggleFPS").hide();
@@ -142,18 +142,9 @@ public class Controles {
         cp5.get("btnNovaPartida").show();
         cp5.get("btnConfig").show();
         
-        Button btnVal = cp5.get(Button.class, "btnIdiomaVal");
-        Button btnEng = cp5.get(Button.class, "btnIdiomaEng");
-        if (btnVal != null && btnEng != null) {
-          btnVal.show();
-          btnEng.show();
-          if (app.idiomaActual.equals("cat")) {
-            btnVal.setColorBackground(app.color(0, 180, 100)); // Actiu verd neó
-            btnEng.setColorBackground(app.color(40, 40, 60));  // Passiu gris
-          } else {
-            btnVal.setColorBackground(app.color(40, 40, 60));  // Passiu gris
-            btnEng.setColorBackground(app.color(0, 180, 100)); // Actiu verd neó
-          }
+        ScrollableList list = (ScrollableList) cp5.get("desplegableIdioma");
+        if (list != null) {
+          list.show();
         }
 
         Button btnCarregar = cp5.get(Button.class, "btnCarregarPartida");
@@ -218,6 +209,10 @@ public class Controles {
       }
       if (cp5.get(controlP5.Button.class, "btnTornar") != null) {
         cp5.get(controlP5.Button.class, "btnTornar").setLabel(textTornar);
+      }
+      ScrollableList list = (ScrollableList) cp5.get("desplegableIdioma");
+      if (list != null) {
+        list.getCaptionLabel().set(app.idiomaActual.equals("cat") ? "VALENCIÀ" : "ENGLISH");
       }
     }
     catch (Exception e) {

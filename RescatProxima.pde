@@ -795,16 +795,14 @@ public void canviarFPS(boolean value) {
   saveJSONObject(configJSON, "data/config.json");
 }
 
-public void seleccionarValencian() {
-  idiomaActual = "cat";
-  aplicarIdioma();
-  actualitzarVisibilitatMenus();
-}
-
-public void seleccionarEnglish() {
-  idiomaActual = "eng";
-  aplicarIdioma();
-  actualitzarVisibilitatMenus();
+public void desplegableIdioma(float n) {
+  int idx = (int) n;
+  String targetIdioma = (idx == 0) ? "cat" : "eng";
+  if (!idiomaActual.equals(targetIdioma)) {
+    idiomaActual = targetIdioma;
+    aplicarIdioma();
+    actualitzarVisibilitatMenus();
+  }
 }
 
 public void obrirConfiguracio() {
