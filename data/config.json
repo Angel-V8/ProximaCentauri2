@@ -1,5 +1,5 @@
 {
   "mostrarFPS": true,
-  "desactivarParallax": true,
-  "dificultat": 1
+  "desactivarParallax": false,
+  "dificultat": 0
 }

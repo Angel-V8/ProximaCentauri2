@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import controlP5.*;
 
 JSONObject configJSON;
-ControlP5 cp5;
+GestorUI gestorUI;
 
 // Variables Globals
 PImage fonsInici;
@@ -53,104 +53,7 @@ void setup() {
   carregarConfiguracio();
 
   // CONFIGURACIÓ DEL MENÚ I CONTROLS CP5
-  cp5 = new ControlP5(this);
-
-  // --- CONTROLS DEL MENÚ PRINCIPAL ---
-  cp5.addButton("btnNovaPartida")
-    .setLabel("NOVA PARTIDA")
-    .setPosition(width/2 - 100, height/2 - 50)
-    .setSize(200, 45)
-    .plugTo(this, "iniciarJoc");
-
-  cp5.addButton("btnCarregarPartida")
-    .setLabel("CARREGAR PARTIDA")
-    .setPosition(width/2 - 100, height/2 + 5)
-    .setSize(200, 45)
-    .plugTo(this, "carregarPartida");
-
-  cp5.addButton("btnConfig")
-    .setLabel("CONFIGURACIO")
-    .setPosition(width/2 - 100, height/2 + 60)
-    .setSize(200, 45)
-    .plugTo(this, "obrirConfiguracio");
-
-  cp5.addScrollableList("desplegableIdioma")
-    .setPosition(width/2 - 100, height/2 + 115)
-    .setSize(200, 100)
-    .setBarHeight(40)
-    .setItemHeight(40)
-    .addItem("Valencia", 0)
-    .addItem("English", 1)
-    .setLabel("Tria el teu idioma / Choose language")
-    .close();
-
-  // --- CONTROLS DEL MENÚ DE PAUSA ---
-  cp5.addButton("btnSeguir")
-    .setLabel("TORNAR AL JOC")
-    .setPosition(width/2 - 120, height/2 - 25)
-    .setSize(240, 45)
-    .setColorBackground(color(30, 150, 80))
-    .setColorForeground(color(40, 180, 100))
-    .setColorActive(color(50, 200, 120))
-    .plugTo(this, "resumirJoc");
-
-  cp5.addButton("btnGuardarSortir")
-    .setLabel("GUARDAR I EIXIR")
-    .setPosition(width/2 - 120, height/2 + 35)
-    .setSize(240, 45)
-    .setColorBackground(color(180, 50, 50))
-    .setColorForeground(color(210, 60, 60))
-    .setColorActive(color(240, 70, 70))
-    .plugTo(this, "guardarIEixir");
-
-  // --- CONTROLS DE CONFIGURACIÓ IN-GAME (Ocults per defecte) ---
-  cp5.addToggle("toggleDificultat")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 90)
-    .setSize(60, 25)
-    .setMode(ControlP5.SWITCH)
-    .setState(configJSON.getInt("dificultat") == 1)
-    .setColorActive(color(255, 50, 80))
-    .setColorForeground(color(180, 30, 50))
-    .setColorBackground(color(40, 40, 60));
-
-  cp5.addToggle("toggleParallax")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 30)
-    .setSize(60, 25)
-    .setMode(ControlP5.SWITCH)
-    .setState(configJSON.getBoolean("desactivarParallax"))
-    .setColorActive(color(0, 255, 128))
-    .setColorForeground(color(0, 200, 100))
-    .setColorBackground(color(40, 40, 60));
-
-  cp5.addToggle("toggleFPS")
-    .setLabel("")
-    .setPosition(width/2 - 50, height/2 + 30)
-    .setSize(60, 25)
-    .setMode(ControlP5.SWITCH)
-    .setState(configJSON.getBoolean("mostrarFPS"))
-    .setColorActive(color(0, 255, 128))
-    .setColorForeground(color(0, 200, 100))
-    .setColorBackground(color(40, 40, 60));
-
-  cp5.addButton("btnBoss")
-    .setLabel("JUGAR BOSS")
-    .setPosition(width/2 - 220, height/2 + 110)
-    .setSize(210, 45)
-    .setColorBackground(color(200, 30, 80))
-    .setColorForeground(color(255, 50, 120))
-    .setColorActive(color(255, 100, 150))
-    .plugTo(this, "iniciarBoss");
-
-  cp5.addButton("btnTornar")
-    .setLabel("TORNAR")
-    .setPosition(width/2 + 10, height/2 + 110)
-    .setSize(210, 45)
-    .setColorBackground(color(30, 80, 200))
-    .setColorForeground(color(50, 120, 255))
-    .setColorActive(color(100, 150, 255))
-    .plugTo(this, "tornarAlMenu");
+  gestorUI = new GestorUI(this);
 
   // Ajustem la visibilitat inicial dels dos menús
   enConfiguracio = false;
@@ -194,17 +97,17 @@ void draw() {
       textSize(14);
       
       // Dificultat
-      boolean difDificil = cp5.get(Toggle.class, "toggleDificultat").getState();
+      boolean difDificil = gestorUI.getCP5().get(Toggle.class, "toggleDificultat").getState();
       fill(difDificil ? color(255, 50, 80) : color(0, 220, 255));
       text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : "HARD") : (idiomaActual.equals("cat") ? "NORMAL" : "NORMAL"), width/2 + 30, height/2 - 77.5f);
       
       // Parallax
-      boolean parallaxDesactivat = cp5.get(Toggle.class, "toggleParallax").getState();
+      boolean parallaxDesactivat = gestorUI.getCP5().get(Toggle.class, "toggleParallax").getState();
       fill(parallaxDesactivat ? color(255, 50, 80) : color(0, 255, 128));
       text(parallaxDesactivat ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 - 17.5f);
       
       // FPS
-      boolean fpsActiu = cp5.get(Toggle.class, "toggleFPS").getState();
+      boolean fpsActiu = gestorUI.getCP5().get(Toggle.class, "toggleFPS").getState();
       fill(fpsActiu ? color(0, 255, 128) : color(150));
       text(fpsActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 + 42.5f);
     } else {
@@ -560,7 +463,8 @@ void draw() {
     fill(0, 255, 100); // Verd neó
     textAlign(CENTER, CENTER);
     textSize(60);
-    text("NIVELL " + numeroNivell + " SUPERAT!", width/2, height/2 - 60);
+    String txtSuperat = idiomaActual.equals("cat") ? "NIVELL " + numeroNivell + " SUPERAT!" : "LEVEL " + numeroNivell + " CLEARED!";
+    text(txtSuperat, width/2, height/2 - 60);
 
     fill(200, 200, 255);
     textSize(25);
@@ -569,7 +473,7 @@ void draw() {
     if (frameCount % 60 > 45) punts = "...";
     else if (frameCount % 60 > 30) punts = "..";
     else if (frameCount % 60 > 15) punts = ".";
-    text("Preparant Nivell " + (numeroNivell + 1) + punts, width/2, height/2 + 20);
+    text(getTraduccio("preparant") + (numeroNivell + 1) + punts, width/2, height/2 + 20);
 
     // Barra de progrés visual
     float progresCarga = constrain((millis() - tempsTransicio) / 3000.0f, 0, 1);
@@ -600,7 +504,7 @@ void draw() {
     if (frameCount % 60 < 30) {
       fill(255, 255, 0);
       textSize(22);
-      text("Polsa 'R' per a tornar al Menú Principal", width/2, height/2 + 60);
+      text(getTraduccio("tornarMenu"), width/2, height/2 + 60);
     }
   } else if (estatJoc == 3) {
       // ==========================================
@@ -613,21 +517,21 @@ void draw() {
       textAlign(CENTER, CENTER);
       fill(0, 255, 128); // Verd mar brillant
       textSize(80);
-      text("VICTÒRIA!", width/2, height/2 - 70);
+      text(idiomaActual.equals("cat") ? "VICTÒRIA!" : "VICTORY!", width/2, height/2 - 70);
 
       fill(255);
       textSize(26);
-      text("Felicitats! Has salvat Pròxima Centauri!", width/2, height/2 + 10);
+      text(getTraduccio("felicitats"), width/2, height/2 + 10);
       
       fill(0, 255, 255);
       textSize(22);
-      text("PUNTUACIÓ FINAL: " + marcador.getScore(), width/2, height/2 + 60);
+      text(getTraduccio("puntuacioFinal") + marcador.getScore(), width/2, height/2 + 60);
 
       // Text de reinici parpadejant
       if (frameCount % 60 < 30) {
         fill(255, 255, 0);
         textSize(18);
-        text("Polsa 'R' per a tornar al Menú Principal", width/2, height/2 + 120);
+        text(getTraduccio("tornarMenu"), width/2, height/2 + 120);
       }
     }
 }
@@ -718,7 +622,7 @@ void keyPressed() {
     enConfiguracio = false;
     enPausa = false;
     actualitzarVisibilitatMenus();
-    cp5.show();
+    gestorUI.show();
 
     carregarConfiguracio();
     jugador.aplicarConfiguracio(100, 5, 0);
@@ -750,30 +654,30 @@ void carregarNivell(int num) {
   int puntsBase = marcador.getScore();
 
   if (num == 1) {
-    nivellActual = new Pantalla(this, 1, "Inici de l'expedició", "./img/lvl1.png", puntsBase + 500, 2500, 0, 0);
+    nivellActual = new Pantalla(this, 1, getNomNivell(1), "./img/lvl1.png", puntsBase + 500, 2500, 0, 0);
   } else if (num == 2) {
     // NIVELL 2: L'únic nivell 100% de temps i meteorits (esquivar 20 segons)
-    nivellActual = new Pantalla(this, 2, "Cinturó de Júpiter", "./img/lvl2.png", 99999, 0, 6, 20);
+    nivellActual = new Pantalla(this, 2, getNomNivell(2), "./img/lvl2.png", 99999, 0, 6, 20);
   } else if (num == 3) {
-    nivellActual = new Pantalla(this, 3, "Arribada a Plutó", "./img/lvl3.png", puntsBase + 800, 2000, 1, 0);
+    nivellActual = new Pantalla(this, 3, getNomNivell(3), "./img/lvl3.png", puntsBase + 800, 2000, 1, 0);
   } else if (num == 4) {
     // NIVELL 4: Ara és per punts. Viatge amb alguns meteorits i enemics.
-    nivellActual = new Pantalla(this, 4, "Viatge interestel·lar", "./img/lvl4.png", puntsBase + 1200, 1500, 2, 0);
+    nivellActual = new Pantalla(this, 4, getNomNivell(4), "./img/lvl4.png", puntsBase + 1200, 1500, 2, 0);
   } else if (num == 5) {
-    nivellActual = new Pantalla(this, 5, "Arribada a Pròxima Centauri", "./img/lvl5.png", puntsBase + 1500, 1200, 0, 0);
+    nivellActual = new Pantalla(this, 5, getNomNivell(5), "./img/lvl5.png", puntsBase + 1500, 1200, 0, 0);
   } else if (num == 6) {
-    nivellActual = new Pantalla(this, 6, "Primera línia de protecció", "./img/lvl6.png", puntsBase + 1800, 1000, 1, 0);
+    nivellActual = new Pantalla(this, 6, getNomNivell(6), "./img/lvl6.png", puntsBase + 1800, 1000, 1, 0);
   } else if (num == 7) {
-    nivellActual = new Pantalla(this, 7, "Escut de defensa del planeta", "./img/lvl7.png", puntsBase + 2200, 800, 0, 0);
+    nivellActual = new Pantalla(this, 7, getNomNivell(7), "./img/lvl7.png", puntsBase + 2200, 800, 0, 0);
   } else if (num == 8) {
     // NIVELL 8: Ara és per punts.
-    nivellActual = new Pantalla(this, 8, "Viatge a la base", "./img/lvl8.png", puntsBase + 2600, 800, 2, 0);
+    nivellActual = new Pantalla(this, 8, getNomNivell(8), "./img/lvl8.png", puntsBase + 2600, 800, 2, 0);
   } else if (num == 9) {
-    nivellActual = new Pantalla(this, 9, "El rescat de la base", "./img/lvl9.png", puntsBase + 3000, 600, 1, 0);
+    nivellActual = new Pantalla(this, 9, getNomNivell(9), "./img/lvl9.png", puntsBase + 3000, 600, 1, 0);
   } else if (num == 10) {
     // NIVELL 10: El Monstre Final (Jefe de Proxima Centauri)
     // Utilitzem el fons del nivell 9 amb un objectiu molt gran que requereix matar el boss
-    nivellActual = new Pantalla(this, 10, "El Guardià de Pròxima Centauri", "./img/lvl9.png", 99999, 0, 0, 0);
+    nivellActual = new Pantalla(this, 10, getNomNivell(10), "./img/lvl9.png", 99999, 0, 0, 0);
     boss = new MonstreFinal(10, configJSON.getInt("dificultat") == 1);
   } else {
     println("PREPARAT PEL BOSS!");
@@ -856,7 +760,7 @@ public void guardarIEixir() {
   guardarPartida();
   enPausa = false;
   estatJoc = -1;
-  cp5.show();
+  gestorUI.show();
   actualitzarVisibilitatMenus();
 }
 
@@ -865,9 +769,8 @@ void carregarConfiguracio() {
   if (configJSON == null) {
     configJSON = new JSONObject();
   }
-  // Assegurem que existeixen els nous camps amb valors per defecte coherents
   if (!configJSON.hasKey("dificultat")) {
-    configJSON.setInt("dificultat", 0); // 0 = Normal, 1 = Dificil
+    configJSON.setInt("dificultat", 0); 
   }
   if (!configJSON.hasKey("desactivarParallax")) {
     configJSON.setBoolean("desactivarParallax", false);
@@ -877,21 +780,31 @@ void carregarConfiguracio() {
   }
 }
 
-// Guarda els toggles a config.json
-public void desarConfiguracio() {
-  if (configJSON == null) {
-    configJSON = new JSONObject();
-  }
-  
-  int dificultat = cp5.get(Toggle.class, "toggleDificultat").getState() ? 1 : 0;
-  boolean desactivarParallax = cp5.get(Toggle.class, "toggleParallax").getState();
-  boolean mostrarFPS = cp5.get(Toggle.class, "toggleFPS").getState();
-  
-  configJSON.setInt("dificultat", dificultat);
-  configJSON.setBoolean("desactivarParallax", desactivarParallax);
-  configJSON.setBoolean("mostrarFPS", mostrarFPS);
-  
+public void canviarDificultat(boolean value) {
+  configJSON.setInt("dificultat", value ? 1 : 0);
   saveJSONObject(configJSON, "data/config.json");
+}
+
+public void canviarParallax(boolean value) {
+  configJSON.setBoolean("desactivarParallax", value);
+  saveJSONObject(configJSON, "data/config.json");
+}
+
+public void canviarFPS(boolean value) {
+  configJSON.setBoolean("mostrarFPS", value);
+  saveJSONObject(configJSON, "data/config.json");
+}
+
+public void seleccionarValencian() {
+  idiomaActual = "cat";
+  aplicarIdioma();
+  actualitzarVisibilitatMenus();
+}
+
+public void seleccionarEnglish() {
+  idiomaActual = "eng";
+  aplicarIdioma();
+  actualitzarVisibilitatMenus();
 }
 
 public void obrirConfiguracio() {
@@ -900,111 +813,38 @@ public void obrirConfiguracio() {
 }
 
 public void tornarAlMenu() {
-  desarConfiguracio(); // Desar canvis fets
   enConfiguracio = false;
   actualitzarVisibilitatMenus();
 }
 
 public void actualitzarVisibilitatMenus() {
-  if (cp5.get("btnNovaPartida") != null) cp5.get("btnNovaPartida").hide();
-  if (cp5.get("btnCarregarPartida") != null) cp5.get("btnCarregarPartida").hide();
-  if (cp5.get("btnConfig") != null) cp5.get("btnConfig").hide();
-  if (cp5.get("desplegableIdioma") != null) cp5.get("desplegableIdioma").hide();
-  if (cp5.get("toggleDificultat") != null) cp5.get("toggleDificultat").hide();
-  if (cp5.get("toggleParallax") != null) cp5.get("toggleParallax").hide();
-  if (cp5.get("toggleFPS") != null) cp5.get("toggleFPS").hide();
-  if (cp5.get("btnBoss") != null) cp5.get("btnBoss").hide();
-  if (cp5.get("btnTornar") != null) cp5.get("btnTornar").hide();
-  if (cp5.get("btnSeguir") != null) cp5.get("btnSeguir").hide();
-  if (cp5.get("btnGuardarSortir") != null) cp5.get("btnGuardarSortir").hide();
-
-  if (estatJoc == -1) {
-    if (enConfiguracio) {
-      cp5.get("toggleDificultat").show();
-      cp5.get("toggleParallax").show();
-      cp5.get("toggleFPS").show();
-      cp5.get("btnBoss").show();
-      cp5.get("btnTornar").show();
-    } else {
-      cp5.get("btnNovaPartida").show();
-      cp5.get("btnConfig").show();
-      cp5.get("desplegableIdioma").show();
-      
-      Button btnCarregar = cp5.get(Button.class, "btnCarregarPartida");
-      if (btnCarregar != null) {
-        btnCarregar.show();
-        File f = new File(dataPath("partida.json"));
-        if (f.exists()) {
-          btnCarregar.setLock(false)
-                     .setColorBackground(color(0, 180, 100))
-                     .setColorForeground(color(0, 210, 120))
-                     .setColorActive(color(0, 240, 140));
-        } else {
-          btnCarregar.setLock(true)
-                     .setColorBackground(color(80, 80, 80))
-                     .setColorForeground(color(80, 80, 80))
-                     .setColorActive(color(80, 80, 80));
-        }
-      }
-    }
-  } else if (estatJoc == 0) {
-    if (enPausa) {
-      cp5.show();
-      cp5.get("btnSeguir").show();
-      cp5.get("btnGuardarSortir").show();
-    } else {
-      cp5.hide();
-    }
-  } else {
-    cp5.hide();
+  if (gestorUI != null) {
+    gestorUI.actualitzarVisibilitatMenus();
   }
 }
 
 void aplicarIdioma() {
-  try {
-    XML xmlSencer = loadXML("data/idiomes.xml");
-    XML xmlIdioma = xmlSencer.getChild(idiomaActual);
-
-    textTitol = xmlIdioma.getChild("titol").getContent();
-    String textConfig = xmlIdioma.getChild("config").getContent();
-    String textBoss = xmlIdioma.getChild("boss") != null ? xmlIdioma.getChild("boss").getContent() : "JUGAR BOSS";
-    String textTornar = xmlIdioma.getChild("tornar") != null ? xmlIdioma.getChild("tornar").getContent() : "TORNAR";
-    String textNova = xmlIdioma.getChild("nova") != null ? xmlIdioma.getChild("nova").getContent() : "NOVA PARTIDA";
-    String textCarregar = xmlIdioma.getChild("carregar") != null ? xmlIdioma.getChild("carregar").getContent() : "CARREGAR PARTIDA";
-    String textSeguir = xmlIdioma.getChild("seguir") != null ? xmlIdioma.getChild("seguir").getContent() : "TORNAR AL JOC";
-    String textGuardar = xmlIdioma.getChild("guardar") != null ? xmlIdioma.getChild("guardar").getContent() : "GUARDAR I EIXIR";
-
-    if (cp5 != null) {
-      cp5.get(controlP5.Button.class, "btnConfig").setLabel(textConfig);
-      if (cp5.get(controlP5.Button.class, "btnNovaPartida") != null) {
-        cp5.get(controlP5.Button.class, "btnNovaPartida").setLabel(textNova);
-      }
-      if (cp5.get(controlP5.Button.class, "btnCarregarPartida") != null) {
-        cp5.get(controlP5.Button.class, "btnCarregarPartida").setLabel(textCarregar);
-      }
-      if (cp5.get(controlP5.Button.class, "btnSeguir") != null) {
-        cp5.get(controlP5.Button.class, "btnSeguir").setLabel(textSeguir);
-      }
-      if (cp5.get(controlP5.Button.class, "btnGuardarSortir") != null) {
-        cp5.get(controlP5.Button.class, "btnGuardarSortir").setLabel(textGuardar);
-      }
-      if (cp5.get(controlP5.Button.class, "btnBoss") != null) {
-        cp5.get(controlP5.Button.class, "btnBoss").setLabel(textBoss);
-      }
-      if (cp5.get(controlP5.Button.class, "btnTornar") != null) {
-        cp5.get(controlP5.Button.class, "btnTornar").setLabel(textTornar);
-      }
-    }
-  }
-  catch (Exception e) {
-    println("Error carregant idiomes.xml");
+  if (gestorUI != null) {
+    gestorUI.aplicarIdioma();
   }
 }
 
-public void desplegableIdioma(int n) {
-  if (n == 0) idiomaActual = "cat";
-  else if (n == 1) idiomaActual = "eng";
-  aplicarIdioma();
+String getTraduccio(String clau) {
+  try {
+    XML xmlSencer = loadXML("data/idiomes.xml");
+    XML xmlIdioma = xmlSencer.getChild(idiomaActual);
+    XML xmlClau = xmlIdioma.getChild(clau);
+    if (xmlClau != null) {
+      return xmlClau.getContent();
+    }
+  } catch (Exception e) {
+    println("Error loading translation for: " + clau);
+  }
+  return "";
+}
+
+String getNomNivell(int num) {
+  return getTraduccio("lvl" + num);
 }
 
 void incrementarPunts(int valor) {

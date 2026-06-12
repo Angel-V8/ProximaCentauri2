@@ -112,7 +112,8 @@ public class Pantalla {
     app.fill(255);
     app.textSize(18);
     app.textAlign(PApplet.LEFT);
-    app.text("Nivell " + this.idNivell + " - " + this.titol, 10, 75); // Baixem l'alçada a 75 perquè no xafe el HUD
+    String prefix = ((RescatProxima)app).idiomaActual.equals("cat") ? "Nivell " : "Level ";
+    app.text(prefix + this.idNivell + " - " + this.titol, 10, 75); // Baixem l'alçada a 75 perquè no xafe el HUD
   }
 
   // Comprova si el jugador ja ha arribat als punts necessaris per guanyar
