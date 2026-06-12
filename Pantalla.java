@@ -112,7 +112,8 @@ public class Pantalla {
     app.fill(255);
     app.textSize(18);
     app.textAlign(PApplet.LEFT);
-    String prefix = ((RescatProxima)app).idiomaActual.equals("cat") ? "Nivell " : "Level ";
+    String currentIdioma = ((RescatProxima)app).idiomaActual;
+    String prefix = currentIdioma.equals("cat") ? "Nivell " : (currentIdioma.equals("esp") ? "Nivel " : "Level ");
     app.text(prefix + this.idNivell + " - " + this.titol, 10, 75); // Baixem l'alçada a 75 perquè no xafe el HUD
   }
 

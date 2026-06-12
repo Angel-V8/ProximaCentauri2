@@ -48,4 +48,28 @@
         <lvl9>Rescue of the Base</lvl9>
         <lvl10>The Guardian of Proxima Centauri</lvl10>
     </eng>
+    <esp>
+        <titol>RESCATE EN PROXIMA CENTAURI</titol>
+        <config>CONFIGURACIÓN</config>
+        <boss>JUGAR JEFE</boss>
+        <tornar>VOLVER</tornar>
+        <nova>NUEVA PARTIDA</nova>
+        <carregar>CARGAR PARTIDA</carregar>
+        <seguir>REANUDAR JUEGO</seguir>
+        <guardar>GUARDAR Y SALIR</guardar>
+        <preparant>Preparando Nivel </preparant>
+        <felicitats>¡Felicidades! ¡Has salvado Próxima Centauri!</felicitats>
+        <puntuacioFinal>PUNTUACIÓN FINAL: </puntuacioFinal>
+        <tornarMenu>Pulsa 'R' para volver al Menú Principal</tornarMenu>
+        <lvl1>Inicio de la expedición</lvl1>
+        <lvl2>Cinturón de Júpiter</lvl2>
+        <lvl3>Llegada a Plutón</lvl3>
+        <lvl4>Viaje interestelar</lvl4>
+        <lvl5>Llegada a Próxima Centauri</lvl5>
+        <lvl6>Primera línea de protección</lvl6>
+        <lvl7>Escudo de defensa del planeta</lvl7>
+        <lvl8>Viaje a la base</lvl8>
+        <lvl9>El rescate de la base</lvl9>
+        <lvl10>El Guardián de Próxima Centauri</lvl10>
+    </esp>
 </idiomes>

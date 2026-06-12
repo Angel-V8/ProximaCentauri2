@@ -22,31 +22,43 @@ public class Controles {
     cp5.addButton("btnNovaPartida")
       .setPosition(app.width/2 - 100, app.height/2 - 50)
       .setSize(200, 45)
+      .setColorBackground(app.color(15, 25, 45))
+      .setColorForeground(app.color(0, 180, 100))
+      .setColorActive(app.color(0, 255, 128))
       .plugTo(app, "iniciarJoc");
 
     cp5.addButton("btnCarregarPartida")
       .setPosition(app.width/2 - 100, app.height/2 + 5)
       .setSize(200, 45)
+      .setColorBackground(app.color(15, 25, 45))
+      .setColorForeground(app.color(0, 180, 100))
+      .setColorActive(app.color(0, 255, 128))
       .plugTo(app, "carregarPartida");
 
     cp5.addButton("btnConfig")
       .setPosition(app.width/2 - 100, app.height/2 + 60)
       .setSize(200, 45)
+      .setColorBackground(app.color(15, 25, 45))
+      .setColorForeground(app.color(0, 180, 100))
+      .setColorActive(app.color(0, 255, 128))
       .plugTo(app, "obrirConfiguracio");
 
     // Selector de llenguatge en format ScrollableList (desplegable)
-    cp5.addScrollableList("desplegableIdioma")
+    ScrollableList listIdioma = cp5.addScrollableList("desplegableIdioma")
       .setPosition(app.width/2 - 100, app.height/2 + 115)
-      .setSize(200, 135)
+      .setSize(200, 180)
       .setBarHeight(45)
       .setItemHeight(45)
       .addItem("VALENCIÀ", 0)
       .addItem("ENGLISH", 1)
-      .setColorBackground(app.color(40, 40, 60))
+      .addItem("CASTELLANO", 2)
+      .setColorBackground(app.color(15, 25, 45))
       .setColorForeground(app.color(0, 180, 100))
-      .setColorActive(app.color(0, 240, 140))
-      .close()
-      .plugTo(app, "desplegableIdioma");
+      .setColorActive(app.color(0, 255, 128))
+      .close();
+      
+    listIdioma.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+    listIdioma.plugTo(app, "desplegableIdioma");
 
     // --- CONTROLS DEL MENÚ DE PAUSA ---
     cp5.addButton("btnSeguir")
@@ -153,14 +165,14 @@ public class Controles {
           File f = new File(app.dataPath("partida.json"));
           if (f.exists()) {
             btnCarregar.setLock(false)
-                       .setColorBackground(app.color(0, 180, 100))
-                       .setColorForeground(app.color(0, 210, 120))
-                       .setColorActive(app.color(0, 240, 140));
+                       .setColorBackground(app.color(15, 25, 45))
+                       .setColorForeground(app.color(0, 180, 100))
+                       .setColorActive(app.color(0, 255, 128));
           } else {
             btnCarregar.setLock(true)
-                       .setColorBackground(app.color(80, 80, 80))
-                       .setColorForeground(app.color(80, 80, 80))
-                       .setColorActive(app.color(80, 80, 80));
+                       .setColorBackground(app.color(30, 35, 45))
+                       .setColorForeground(app.color(30, 35, 45))
+                       .setColorActive(app.color(30, 35, 45));
           }
         }
       }
@@ -212,7 +224,13 @@ public class Controles {
       }
       ScrollableList list = (ScrollableList) cp5.get("desplegableIdioma");
       if (list != null) {
-        list.getCaptionLabel().set(app.idiomaActual.equals("cat") ? "VALENCIÀ" : "ENGLISH");
+        if (app.idiomaActual.equals("cat")) {
+          list.getCaptionLabel().set("VALENCIÀ");
+        } else if (app.idiomaActual.equals("eng")) {
+          list.getCaptionLabel().set("ENGLISH");
+        } else if (app.idiomaActual.equals("esp")) {
+          list.getCaptionLabel().set("CASTELLANO");
+        }
       }
     }
     catch (Exception e) {

@@ -81,16 +81,16 @@ void draw() {
       fill(0, 255, 128); // Verd neó
       textAlign(CENTER, CENTER);
       textSize(36);
-      text(idiomaActual.equals("cat") ? "CONFIGURACIÓ" : "SETTINGS", width/2, height/2 - 180);
+      text(idiomaActual.equals("cat") ? "CONFIGURACIÓ" : (idiomaActual.equals("esp") ? "CONFIGURACIÓN" : "SETTINGS"), width/2, height/2 - 180);
       
       // Etiquetes dels controls
       fill(255);
       textSize(15);
       textAlign(RIGHT, CENTER);
       float labelX = width/2 - 70; // 330 (20px a l'esquerra del control)
-      text(idiomaActual.equals("cat") ? "DIFICULTAT:" : "DIFFICULTY:", labelX, height/2 - 77.5f);
-      text(idiomaActual.equals("cat") ? "DESACTIVAR PARALLAX:" : "DISABLE PARALLAX:", labelX, height/2 - 17.5f);
-      text(idiomaActual.equals("cat") ? "MOSTRAR FPS:" : "SHOW FPS:", labelX, height/2 + 42.5f);
+      text(idiomaActual.equals("cat") ? "DIFICULTAT:" : (idiomaActual.equals("esp") ? "DIFICULTAD:" : "DIFFICULTY:"), labelX, height/2 - 77.5f);
+      text(idiomaActual.equals("cat") ? "DESACTIVAR PARALLAX:" : (idiomaActual.equals("esp") ? "DESACTIVAR PARALLAX:" : "DISABLE PARALLAX:"), labelX, height/2 - 17.5f);
+      text(idiomaActual.equals("cat") ? "MOSTRAR FPS:" : (idiomaActual.equals("esp") ? "MOSTRAR FPS:" : "SHOW FPS:"), labelX, height/2 + 42.5f);
 
       // Estat dels toggles escrit a mà
       textAlign(LEFT, CENTER);
@@ -99,17 +99,17 @@ void draw() {
       // Dificultat
       boolean difDificil = controles.getCP5().get(Toggle.class, "toggleDificultat").getState();
       fill(difDificil ? color(255, 50, 80) : color(0, 220, 255));
-      text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : "HARD") : (idiomaActual.equals("cat") ? "NORMAL" : "NORMAL"), width/2 + 30, height/2 - 77.5f);
+      text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : (idiomaActual.equals("esp") ? "DIFÍCIL" : "HARD")) : (idiomaActual.equals("cat") ? "NORMAL" : (idiomaActual.equals("esp") ? "NORMAL" : "NORMAL")), width/2 + 30, height/2 - 77.5f);
       
       // Parallax
       boolean parallaxDesactivat = controles.getCP5().get(Toggle.class, "toggleParallax").getState();
       fill(parallaxDesactivat ? color(255, 50, 80) : color(0, 255, 128));
-      text(parallaxDesactivat ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 - 17.5f);
+      text(parallaxDesactivat ? (idiomaActual.equals("cat") ? "SÍ" : (idiomaActual.equals("esp") ? "SÍ" : "YES")) : "NO", width/2 + 30, height/2 - 17.5f);
       
       // FPS
       boolean fpsActiu = controles.getCP5().get(Toggle.class, "toggleFPS").getState();
       fill(fpsActiu ? color(0, 255, 128) : color(150));
-      text(fpsActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 + 42.5f);
+      text(fpsActiu ? (idiomaActual.equals("cat") ? "SÍ" : (idiomaActual.equals("esp") ? "SÍ" : "YES")) : "NO", width/2 + 30, height/2 + 42.5f);
     } else {
       // Títol del joc normal
       fill(0, 255, 0);
@@ -164,7 +164,7 @@ void draw() {
       fill(0, 255, 128); // Verd neó
       textAlign(CENTER, CENTER);
       textSize(30);
-      text(idiomaActual.equals("cat") ? "JOC EN PAUSA" : "GAME PAUSED", width/2, height/2 - 80);
+      text(idiomaActual.equals("cat") ? "JOC EN PAUSA" : (idiomaActual.equals("esp") ? "JUEGO EN PAUSA" : "GAME PAUSED"), width/2, height/2 - 80);
       popStyle();
       return;
     }
@@ -463,7 +463,7 @@ void draw() {
     fill(0, 255, 100); // Verd neó
     textAlign(CENTER, CENTER);
     textSize(60);
-    String txtSuperat = idiomaActual.equals("cat") ? "NIVELL " + numeroNivell + " SUPERAT!" : "LEVEL " + numeroNivell + " CLEARED!";
+    String txtSuperat = idiomaActual.equals("cat") ? "NIVELL " + numeroNivell + " SUPERAT!" : (idiomaActual.equals("esp") ? "¡NIVEL " + numeroNivell + " SUPERADO!" : "LEVEL " + numeroNivell + " CLEARED!");
     text(txtSuperat, width/2, height/2 - 60);
 
     fill(200, 200, 255);
@@ -517,7 +517,7 @@ void draw() {
       textAlign(CENTER, CENTER);
       fill(0, 255, 128); // Verd mar brillant
       textSize(80);
-      text(idiomaActual.equals("cat") ? "VICTÒRIA!" : "VICTORY!", width/2, height/2 - 70);
+      text(idiomaActual.equals("cat") ? "VICTÒRIA!" : (idiomaActual.equals("esp") ? "¡VICTORIA!" : "VICTORY!"), width/2, height/2 - 70);
 
       fill(255);
       textSize(26);
@@ -797,7 +797,14 @@ public void canviarFPS(boolean value) {
 
 public void desplegableIdioma(float n) {
   int idx = (int) n;
-  String targetIdioma = (idx == 0) ? "cat" : "eng";
+  String targetIdioma = "cat";
+  if (idx == 0) {
+    targetIdioma = "cat";
+  } else if (idx == 1) {
+    targetIdioma = "eng";
+  } else if (idx == 2) {
+    targetIdioma = "esp";
+  }
   if (!idiomaActual.equals(targetIdioma)) {
     idiomaActual = targetIdioma;
     aplicarIdioma();
