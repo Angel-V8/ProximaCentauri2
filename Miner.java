@@ -16,7 +16,7 @@ public class Miner extends Enemic {
     this.temporizador = 0;
     this.cooldown = 100; // Restaurat: Posa mines com abans (cooldown 100)
     this.posicioJugador = posicioJugador;
-    this.tamany = 65; // NOU: Increment de tamany a 65 px per a reflectir que és un enemic pesat
+    this.tamany = 65; // Mida de la nau miner
   }
 
   public void actualitzar() {
@@ -39,7 +39,7 @@ public class Miner extends Enemic {
 
   public void mostrar(PApplet app) {
     if (this.isDestruint()) {
-      super.mostrar(app); // NOU: Dibuixa l'animació d'explosió si s'està destruint
+      super.mostrar(app); // Dibuixa l'animació d'explosió
       return;
     }
 
@@ -57,7 +57,7 @@ public class Miner extends Enemic {
   }
 
   public Mina deixarMina() {
-    if (this.isDestruint()) return null; // NOU: No solta mines si s'està destruint
+    if (this.isDestruint()) return null; // Evita soltar mines si s'està destruint
     if (this.temporizador >= this.cooldown) {
       this.temporizador = 0;
       return new Mina(this.posicio, this.posicioJugador);

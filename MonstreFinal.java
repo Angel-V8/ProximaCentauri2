@@ -35,7 +35,7 @@ public class MonstreFinal {
   private Animation animacio;
   private PVector posicioZero; // PVector(0,0) per a renderitzar amb translat/scale in-place
 
-  private boolean esDificil = true; // NOU: Control de dificultat del boss
+  private boolean esDificil = true; // Control de dificultat del boss
 
   // CONSTRUCTORS
 
@@ -71,7 +71,7 @@ public class MonstreFinal {
     this(nivell, true);
   }
 
-  // NOU: Constructor parametritzat que rep la dificultat per a escalar estadístiques
+  // Constructor parametritzat que rep la dificultat per a ajustar estadístiques
   public MonstreFinal(int nivell, boolean esDificil) {
     this();
     this.esDificil = esDificil;
@@ -109,7 +109,7 @@ public class MonstreFinal {
     // 1. GESTIÓ DE LA CÀRREGA DEL KAMEHAMEHA (Goku es queda quiet levitant)
     if (this.cargantKamehameha) {
       this.temporizadorKamehameha++;
-      if (this.temporizadorKamehameha >= 70) { // 70 frames de càrrega (~1.1 segons)
+      if (this.temporizadorKamehameha >= 70) { // 70 frames de càrrega
         this.cargantKamehameha = false;
         this.disparantKamehameha = true;
         this.temporizadorKamehameha = 0;
@@ -120,7 +120,7 @@ public class MonstreFinal {
     // 2. GESTIÓ DEL DISPAR DEL KAMEHAMEHA (Goku manté la posició)
     if (this.disparantKamehameha) {
       this.temporizadorKamehameha++;
-      if (this.temporizadorKamehameha >= 45) { // 45 frames de raig actiu (~0.75 segons)
+      if (this.temporizadorKamehameha >= 45) { // 45 frames de raig actiu
         this.disparantKamehameha = false;
         this.temporizadorKamehameha = 0;
       }
@@ -166,12 +166,12 @@ public class MonstreFinal {
 
     // Dibuix dels efectes especials del Kamehameha abans del personatge
     if (this.cargantKamehameha) {
-      // A) Corredor de perill vermell translúcid (mida del futur làser) i línia guia
+      // A) Corredor de perill roig translúcid (mida del futur làser) i línia guia
       app.pushStyle();
       app.rectMode(PApplet.CORNERS);
       app.noStroke();
       
-      // Si està bloquejat (a partir del frame 50), parpelleja agressivament en vermell/taronja brillant
+      // Si està bloquejat (a partir del frame 50), parpelleja agressivament en roig/taronja brillant
       boolean blocat = (this.temporizadorKamehameha >= 50);
       if (blocat) {
         float warningAlpha = 40 + (app.frameCount % 5) * 25; // Parpelleig molt ràpid i intens
@@ -185,7 +185,7 @@ public class MonstreFinal {
         app.fill(255, 0, 0, warningAlpha);
         app.rect(0, this.kamehamehaY - 50, this.posicio.x - 40, this.kamehamehaY + 50);
         
-        app.stroke(255, 0, 0, 150); // Línia vermella de seguiment
+        app.stroke(255, 0, 0, 150); // Línia roja de seguiment
         app.strokeWeight(2);
       }
       app.line(this.posicio.x - 40, this.posicio.y, 0, this.kamehamehaY);
@@ -203,7 +203,7 @@ public class MonstreFinal {
     } 
     
     if (this.disparantKamehameha) {
-      // C) Raig de làser massiu (Tres capes de color per a efecte neó DBZ - Amplada de 100px total)
+      // C) Raig de làser massiu (Tres capes de color, amplada de 100px total)
       app.pushStyle();
       app.rectMode(PApplet.CORNERS);
       app.noStroke();
@@ -252,7 +252,7 @@ public class MonstreFinal {
     app.rectMode(PApplet.CENTER);
     app.rect(app.width / 2, app.height - 40, 520, 34, 10);
     
-    // Fons interior vermell
+    // Fons interior roig
     app.rectMode(PApplet.CORNER);
     app.fill(60, 10, 10);
     app.rect(app.width / 2 - 250, app.height - 50, 500, 20, 5);
@@ -266,7 +266,7 @@ public class MonstreFinal {
     app.fill(255);
     app.textAlign(PApplet.CENTER, PApplet.CENTER);
     app.textSize(13);
-    app.text("PROXIMA CENTAURI GUARDIAN (GOKU BOSS)", app.width / 2, app.height - 41);
+    app.text("PROXIMA CENTAURI GUARDIAN", app.width / 2, app.height - 41);
     
     app.popStyle();
   }
@@ -279,7 +279,7 @@ public class MonstreFinal {
     // Només ataca si ja s'ha col·locat en posició de combat
     if (this.posicio.x <= 620) {
       
-      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 50 per poder esquivar-lo con aviso previo estilo Undertale)
+      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 50 per poder esquivar-lo amb avís previ)
       if (this.cargantKamehameha) {
         if (this.temporizadorKamehameha < 50) {
           this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.28f); // Seguiment molt més ràpid i agressiu
@@ -339,7 +339,7 @@ public class MonstreFinal {
           }
         }
         else {
-          // ATAC 4 (NOU): KAMEHAMEHA LASER DESINTEGRADOR
+          // ATAC 4: KAMEHAMEHA LASER DESINTEGRADOR
           this.cargantKamehameha = true;
           this.temporizadorKamehameha = 0;
           this.kamehamehaY = posicioJugador.y; // Fixa la Y inicial apuntant al jugador

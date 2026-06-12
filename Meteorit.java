@@ -9,7 +9,7 @@ public class Meteorit implements Entitat {
   private int tamany;
   private int dany;
   private int vida;
-  private int vidaMaxima; // NOU: Registrar la vida màxima per a la barra de vida
+  private int vidaMaxima; // Registrar la vida màxima per a la barra de vida
 
   // ATRIBUTS DE ROTACIÓ I SPRITES
   private float angle;
@@ -66,11 +66,11 @@ public class Meteorit implements Entitat {
 
       app.popMatrix();
 
-      // NOU: Dibuixem la barra de vida només si ha rebut dany (vida < vidaMaxima)
+      // Dibuixem la barra de vida si ha rebut dany (vida < vidaMaxima)
       if (this.vida < this.vidaMaxima) {
         app.pushStyle();
         app.rectMode(processing.core.PApplet.CORNER);
-        app.fill(150, 0, 0); // Vermell fosc de fons
+        app.fill(150, 0, 0); // Roig fosc de fons
         app.rect(this.posicio.x - 15, this.posicio.y - (this.tamany/2 + 10), 30, 4);
         app.fill(0, 255, 0); // Verd de vida
         float ampleVida = PApplet.map(Math.max(0, this.vida), 0, this.vidaMaxima, 0, 30);
@@ -108,13 +108,13 @@ public class Meteorit implements Entitat {
     float y = (float)(Math.random() * 500) + 50;
     this.posicio = new PVector(900, y);
     
-    // NOU: Velocitat vertical aleatòria per a trajectòries diagonals interessants
+    // Velocitat vertical aleatòria per a trajectòries diagonals
     float vy = (float)(Math.random() * 1.6f) - 0.8f;
     this.velocitat = new PVector(4, vy);
     this.tamany = 40;
     this.dany = 10;
     this.vida = 50;
-    this.vidaMaxima = 50; // NOU: Inicialitzar vida màxima per defecte
+    this.vidaMaxima = 50; // Inicialitzar vida màxima per defecte
 
     // Inicialització rotació aleatòria
     this.angle = (float)(Math.random() * Math.PI * 2);
@@ -127,11 +127,11 @@ public class Meteorit implements Entitat {
     this.tamany = tamany;
     this.dany = dany;
     
-    // NOU: La vida és proporcional a la mida (1 tir per cada 10 de diàmetre)
+    // La vida és proporcional a la mida (1 tir per cada 10 de diàmetre)
     this.vida = tamany; 
-    this.vidaMaxima = tamany; // NOU: Inicialitzar vida màxima proporcional
+    this.vidaMaxima = tamany; // Inicialitzar vida màxima proporcional
     
-    // NOU: Velocitat vertical proporcional a la mida i direcció aleatòria
+    // Velocitat vertical proporcional a la mida i direcció aleatòria
     float vy = (float)(Math.random() * 2.0f) - 1.0f;
     // Els meteorits grans són més lents, els menuts més ràpids
     this.velocitat = new PVector(1.0f + (120.0f / tamany), vy);

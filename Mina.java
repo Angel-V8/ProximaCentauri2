@@ -9,14 +9,14 @@ public class Mina {
   private int tamany;
   private boolean actiu;
   
-  // NOUS ATRIBUTS PER A EXPLOSIÓ I VIDA
+  // Atributs de control d'explosió
   private int vida;
   private boolean explotant;
   private int radiExplosio;
   private boolean haDanyatJugador; // Evita danyar repetidament al jugador durant l'explosió
   private Animation animacio; // Animació del parpadeig de la mina
   private Animation animacioExplosio; // Animació de l'explosió de la mina
-  private int vidaMaxima; // NOU: Registrar la vida màxima per a la barra de vida
+  private int vidaMaxima; // Registrar la vida màxima per a la barra de vida
   private PVector posicioJugador; // Referència a la posició del jugador per a l'atracció magnètica
   private java.util.ArrayList<Object> elementsDanyats; // Llista per evitar danyar múltiples vegades la mateixa entitat
 
@@ -34,7 +34,7 @@ public class Mina {
       this.posicio.x -= velocitatX;
       this.posicio.y += velocitatY; 
 
-      // NOU: Atracció magnètica si el jugador està a prop (250px) (in-place per evitar GC)
+      // Atracció magnètica si el jugador està a prop (250px)
       if (this.posicioJugador != null) {
         float distancia = PVector.dist(this.posicio, this.posicioJugador);
         if (distancia < 250) {
@@ -79,11 +79,11 @@ public class Mina {
       }
       this.animacio.display(this.posicio, 1, (float)this.tamany / 512.0f);
 
-      // NOU: Dibuixem la barra de vida només si ha rebut dany (vida < vidaMaxima)
+      // Dibuixem la barra de vida si ha rebut dany (vida < vidaMaxima)
       if (this.vida < this.vidaMaxima) {
         app.pushStyle();
         app.rectMode(processing.core.PApplet.CORNER);
-        app.fill(150, 0, 0); // Vermell fosc de fons
+        app.fill(150, 0, 0); // Roig fosc de fons
         app.rect(this.posicio.x - 15, this.posicio.y - (this.tamany/2 + 10), 30, 4);
         app.fill(0, 255, 0); // Verd de vida
         float ampleVida = PApplet.map(Math.max(0, this.vida), 0, this.vidaMaxima, 0, 30);
@@ -102,10 +102,10 @@ public class Mina {
     // Xicoteta velocitat aleatòria per a que deriven lentament com si suraren
     this.velocitatX = (float)Math.random() * 1.5f - 0.2f; 
     this.velocitatY = (float)Math.random() * 1.5f - 0.75f; 
-    this.tamany = 75; // NOU: Mida de la mina incrementada a 75 px (més gran i amenaçadora)
+    this.tamany = 75; // Mida de la mina
     this.actiu = true;
-    this.vida = 100; // NOU: Més vida per a la mina (100 HP, calen 10 tirs de jugador per detonar-la)
-    this.vidaMaxima = 100; // NOU: Inicialitzar la vida màxima
+    this.vida = 100; // Vida de la mina (100 HP)
+    this.vidaMaxima = 100; // Inicialitzar la vida màxima
     this.explotant = false;
     this.radiExplosio = this.tamany;
     this.haDanyatJugador = false;
@@ -119,7 +119,7 @@ public class Mina {
     this.posicio = origen.copy();
   }
 
-  // NOU: Constructor parametritzat que rep la posició del jugador per a l'atracció magnètica
+  // Constructor parametritzat que rep la posició del jugador per a l'atracció magnètica
   public Mina(PVector origen, PVector posicioJugador) {
     this(origen);
     this.posicioJugador = posicioJugador;
@@ -133,7 +133,7 @@ public class Mina {
     return this.tamany;
   }
   
-  // NOUS MÈTODES
+  // Mètodes de dany i detonació
   public void rebreDany(int dany) {
     if (explotant) return;
     this.vida -= dany;

@@ -19,7 +19,7 @@ String textTitol = "";
 
 Marcador marcador;
 NauPlayer jugador;
-MonstreFinal boss; // NOU: Referència global al boss final
+MonstreFinal boss; // Referència global al boss final
 
 // Llistes Globals
 ArrayList<Enemic> llistaEnemics;
@@ -31,8 +31,8 @@ ArrayList<Dispar> balesEnemigues;
 ArrayList<Mina> llistaMines;
 
 int intervalSpawn = 2000;
-int framesIntervalSpawn = 120; // NOU: Pre-calculat per a optimització
-int framesIntervalMeteorits = 0; // NOU: Pre-calculat per a optimització
+int framesIntervalSpawn = 120; // Pre-calculat per a optimització
+int framesIntervalMeteorits = 0; // Pre-calculat per a optimització
 
 void setup() {
   size(800, 600);
@@ -76,13 +76,13 @@ void draw() {
       fill(10, 15, 30, 220); // Blavós fosc transparent molt premium
       rectMode(CENTER);
       rect(width/2, height/2, 540, 460, 20); // Caixa del menú de configuració
-      
+
       // Títol
       fill(0, 255, 128); // Verd neó
       textAlign(CENTER, CENTER);
       textSize(36);
       text(idiomaActual.equals("cat") ? "CONFIGURACIÓ" : (idiomaActual.equals("esp") ? "CONFIGURACIÓN" : "SETTINGS"), width/2, height/2 - 180);
-      
+
       // Etiquetes dels controls
       fill(255);
       textSize(15);
@@ -95,17 +95,17 @@ void draw() {
       // Estat dels toggles escrit a mà
       textAlign(LEFT, CENTER);
       textSize(14);
-      
+
       // Dificultat
       boolean difDificil = controles.getCP5().get(Toggle.class, "toggleDificultat").getState();
       fill(difDificil ? color(255, 50, 80) : color(0, 220, 255));
       text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : (idiomaActual.equals("esp") ? "DIFÍCIL" : "HARD")) : (idiomaActual.equals("cat") ? "NORMAL" : (idiomaActual.equals("esp") ? "NORMAL" : "NORMAL")), width/2 + 30, height/2 - 77.5f);
-      
+
       // Parallax
       boolean parallaxDesactivat = controles.getCP5().get(Toggle.class, "toggleParallax").getState();
       fill(parallaxDesactivat ? color(255, 50, 80) : color(0, 255, 128));
       text(parallaxDesactivat ? (idiomaActual.equals("cat") ? "SÍ" : (idiomaActual.equals("esp") ? "SÍ" : "YES")) : "NO", width/2 + 30, height/2 - 17.5f);
-      
+
       // FPS
       boolean fpsActiu = controles.getCP5().get(Toggle.class, "toggleFPS").getState();
       fill(fpsActiu ? color(0, 255, 128) : color(150));
@@ -116,7 +116,7 @@ void draw() {
       textAlign(CENTER, CENTER);
       textSize(60);
       text(textTitol, width/2, height/3 - 50);
-      
+
       // Rècord de puntuació
       fill(255, 255, 0); // Groc
       textSize(20);
@@ -175,7 +175,7 @@ void draw() {
       fill(10, 15, 30, 200); // Fons blau fosc transparent
       rectMode(CENTER);
       rect(width/2, height/2, 360, 260, 20); // Caixa del menú de pausa
-      
+
       fill(0, 255, 128); // Verd neó
       textAlign(CENTER, CENTER);
       textSize(30);
@@ -379,11 +379,11 @@ void draw() {
         jugador.rebreDany(30); // Dany massiu de contacte
       }
 
-      // Col·lisió del Kamehameha del boss contra el jugador (desintegrador!)
+      // Col·lisió del feix d'energia del boss contra el jugador (desintegrador!)
       if (boss.isDisparantKamehameha()) {
         float limitX = boss.getPosicio().x - 40;
         if (jugador.getPosicio().x - jugador.getTamany()/2.0f <= limitX) {
-          float radiCollisioY = jugador.getTamany()/4.0f + 18.0f; // Hitbox ultra precisa estil Undertale!
+          float radiCollisioY = jugador.getTamany()/4.0f + 18.0f; // Hitbox precisa del feix del boss
           if (Math.abs(jugador.getPosicio().y - boss.getKamehamehaY()) < radiCollisioY) {
             int danyLaser = (configJSON.getInt("dificultat") == 1) ? 2 : 1;
             jugador.rebreDany(danyLaser); // Dany continu per frame (Dificil = 2, Normal = 1)
@@ -524,33 +524,33 @@ void draw() {
       text(getTraduccio("tornarMenu"), width/2, height/2 + 60);
     }
   } else if (estatJoc == 3) {
-      // ==========================================
-      // ESTAT 3: PANTALLA DE VICTÒRIA (JOC COMPLETAT)
-      // ==========================================
-      nivellActual.dibuixarFons(configJSON.getBoolean("desactivarParallax"));
-      fill(0, 40, 20, 200); // Fons verdós transparent molt premium
-      rect(0, 0, width, height);
+    // ==========================================
+    // ESTAT 3: PANTALLA DE VICTÒRIA (JOC COMPLETAT)
+    // ==========================================
+    nivellActual.dibuixarFons(configJSON.getBoolean("desactivarParallax"));
+    fill(0, 40, 20, 200); // Fons verdós transparent molt premium
+    rect(0, 0, width, height);
 
-      textAlign(CENTER, CENTER);
-      fill(0, 255, 128); // Verd mar brillant
-      textSize(80);
-      text(idiomaActual.equals("cat") ? "VICTÒRIA!" : (idiomaActual.equals("esp") ? "¡VICTORIA!" : "VICTORY!"), width/2, height/2 - 70);
+    textAlign(CENTER, CENTER);
+    fill(0, 255, 128); // Verd mar brillant
+    textSize(80);
+    text(idiomaActual.equals("cat") ? "VICTÒRIA!" : (idiomaActual.equals("esp") ? "¡VICTORIA!" : "VICTORY!"), width/2, height/2 - 70);
 
-      fill(255);
-      textSize(26);
-      text(getTraduccio("felicitats"), width/2, height/2 + 10);
-      
-      fill(0, 255, 255);
-      textSize(22);
-      text(getTraduccio("puntuacioFinal") + marcador.getScore(), width/2, height/2 + 60);
+    fill(255);
+    textSize(26);
+    text(getTraduccio("felicitats"), width/2, height/2 + 10);
 
-      // Text de reinici parpadejant
-      if (frameCount % 60 < 30) {
-        fill(255, 255, 0);
-        textSize(18);
-        text(getTraduccio("tornarMenu"), width/2, height/2 + 120);
-      }
+    fill(0, 255, 255);
+    textSize(22);
+    text(getTraduccio("puntuacioFinal") + marcador.getScore(), width/2, height/2 + 60);
+
+    // Text de reinici parpadejant
+    if (frameCount % 60 < 30) {
+      fill(255, 255, 0);
+      textSize(18);
+      text(getTraduccio("tornarMenu"), width/2, height/2 + 120);
     }
+  }
 }
 
 // ==========================================
@@ -702,7 +702,7 @@ void carregarNivell(int num) {
   }
   intervalSpawn = nivellActual.getVelocitatSpawn();
 
-  // NOU: Pre-calculem els intervals de frames per optimització
+  // Pre-calculem els intervals de frames per optimització
   framesIntervalSpawn = (intervalSpawn > 0) ? (int)((intervalSpawn / 1000.0f) * 60) : 0;
   if (framesIntervalSpawn <= 0 && intervalSpawn > 0) framesIntervalSpawn = 60;
 
@@ -716,9 +716,9 @@ public void iniciarJoc() {
   carregarConfiguracio();
   jugador.resetJugador();
   marcador.resetScore();
-  
+
   jugador.aplicarConfiguracio(100, 5, 0);
-  
+
   estatJoc = 0;
   numeroNivell = 1; // Comença des del nivell 1
   carregarNivell(numeroNivell);
@@ -730,9 +730,9 @@ public void iniciarBoss() {
   carregarConfiguracio();
   jugador.resetJugador();
   marcador.resetScore();
-  
+
   jugador.aplicarConfiguracio(100, 5, 0);
-  
+
   estatJoc = 0;
   numeroNivell = 10; // Comença directament al nivell del boss
   carregarNivell(numeroNivell);
@@ -750,20 +750,20 @@ public void carregarPartida() {
   if (saveJSON != null) {
     int lvl = saveJSON.getInt("nivell");
     int pts = saveJSON.getInt("punts");
-    
+
     enPausa = false;
     controles.hide();
     carregarConfiguracio();
     jugador.resetJugador();
     marcador.resetScore();
-    
-    marcador.incrementScore(pts); 
+
+    marcador.incrementScore(pts);
     jugador.aplicarConfiguracio(100, 5, 0);
-    
+
     estatJoc = 0;
     numeroNivell = lvl;
     carregarNivell(numeroNivell);
-    
+
     actualitzarVisibilitatMenus();
   }
 }
@@ -787,7 +787,7 @@ void carregarConfiguracio() {
     configJSON = new JSONObject();
   }
   if (!configJSON.hasKey("dificultat")) {
-    configJSON.setInt("dificultat", 0); 
+    configJSON.setInt("dificultat", 0);
   }
   if (!configJSON.hasKey("desactivarParallax")) {
     configJSON.setBoolean("desactivarParallax", false);
@@ -862,7 +862,8 @@ String getTraduccio(String clau) {
     if (xmlClau != null) {
       return xmlClau.getContent();
     }
-  } catch (Exception e) {
+  }
+  catch (Exception e) {
     println("Error loading translation for: " + clau);
   }
   return "";
@@ -890,4 +891,3 @@ void comprovarRecord() {
     }
   }
 }
-

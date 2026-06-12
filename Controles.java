@@ -77,7 +77,7 @@ public class Controles {
       .setColorBackground(app.color(40, 40, 60))
       .plugTo(app, "canviarDificultat");
 
-    // Parallax toggle usa verd neó per defecte
+    // Toggle Parallax
     cp5.addToggle("toggleParallax")
       .setLabel("")
       .setPosition(app.width/2 - 50, app.height/2 - 30)
@@ -89,7 +89,7 @@ public class Controles {
       .setColorBackground(app.color(40, 40, 60))
       .plugTo(app, "canviarParallax");
 
-    // FPS toggle usa verd neó per defecte
+    // Toggle FPS
     cp5.addToggle("toggleFPS")
       .setLabel("")
       .setPosition(app.width/2 - 50, app.height/2 + 30)
