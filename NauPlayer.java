@@ -229,4 +229,12 @@ public class NauPlayer implements Entitat {
         return this.tamany;
     }
 
+  public int getEscut() {
+    return this.escut;
+  }
+
+  public int getTempsDobleDispar() {
+    return this.tempsDobleDispar;
+  }
+
 }

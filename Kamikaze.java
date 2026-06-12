@@ -9,7 +9,7 @@ public class Kamikaze extends Enemic {
   public Kamikaze(PVector posicioJugador) {
     super(); // Açò el fa nàixer en X=850 i Y=aleatòria
     
-    this.vida = 20; // El kamikaze és més fràgil, mor de 2 tirs
+    this.vida = 30; // El kamikaze té 3 de vida, mor de 3 tirs
     this.velocitat = 7; // Ràpid, pero esquivable
     this.posicioJugador = posicioJugador; // Guardem la referència per al seguiment dinàmic
     this.tamany = 65; // Mida de la nau kamikaze
@@ -83,7 +83,7 @@ public class Kamikaze extends Enemic {
     app.fill(150, 0, 0);
     app.rect(this.posicio.x - 15, this.posicio.y - 25, 30, 4);
     app.fill(0, 255, 0);
-    float ampleVida = PApplet.map(Math.max(0, this.vida), 0, 20, 0, 30);
+    float ampleVida = PApplet.map(Math.max(0, this.vida), 0, 30, 0, 30);
     app.rect(this.posicio.x - 15, this.posicio.y - 25, ampleVida, 4);
     app.popStyle();
   }

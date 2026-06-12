@@ -566,18 +566,33 @@ void generarEnemics() {
   }
 
   if (contadorFramesNivell > 0 && contadorFramesNivell % interval == 0) {
-    int atzar = (int)random(0, 3);
+    int tipusEnemic = 0; // 0 = Kamikaze, 1 = Interceptor, 2 = Miner
+    float r = random(1);
 
-    // Ajustem la IA/Probabilitat segons el nivell i la narrativa
-    if (numeroNivell == 3) atzar = (int)random(0, 2); // N.3: Kamikazes i Interceptors (sense miners)
-    else if (numeroNivell == 6) {
-      // N.6: Esquadró d'assalt ràpid (molts Kamikazes, algun Interceptor, zero miners)
-      atzar = random(1) < 0.6f ? 0 : 1;
+    if (numeroNivell == 3) {
+      // Nivell 3: Només Kamikazes i Interceptors. Freqüència de Kamikazes incrementada (70%)
+      tipusEnemic = r < 0.7f ? 0 : 1;
+    } else if (numeroNivell == 6) {
+      // Nivell 6: Esquadró d'assalt ràpid, majoria de Kamikazes (80%) i algun Interceptor
+      tipusEnemic = r < 0.8f ? 0 : 1;
+    } else {
+      // Freqüència de Kamikazes incrementada en general (50% Kamikazes, 25% Interceptors, 25% Miners)
+      if (r < 0.5f) {
+        tipusEnemic = 0;
+      } else if (r < 0.75f) {
+        tipusEnemic = 1;
+      } else {
+        tipusEnemic = 2;
+      }
     }
 
-    if (atzar == 0) llistaEnemics.add(new Kamikaze(jugador.getPosicio()));
-    else if (atzar == 1) llistaEnemics.add(new Interceptor(jugador.getPosicio()));
-    else llistaEnemics.add(new Miner(jugador.getPosicio()));
+    if (tipusEnemic == 0) {
+      llistaEnemics.add(new Kamikaze(jugador.getPosicio()));
+    } else if (tipusEnemic == 1) {
+      llistaEnemics.add(new Interceptor(jugador.getPosicio()));
+    } else {
+      llistaEnemics.add(new Miner(jugador.getPosicio()));
+    }
   }
 }
 
