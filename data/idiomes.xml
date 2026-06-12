@@ -6,6 +6,10 @@
         <config>CONFIGURACIO</config>
         <boss>JUGAR BOSS</boss>
         <tornar>TORNAR</tornar>
+        <nova>NOVA PARTIDA</nova>
+        <carregar>CARREGAR PARTIDA</carregar>
+        <seguir>TORNAR AL JOC</seguir>
+        <guardar>GUARDAR I EIXIR</guardar>
     </cat>
     <eng>
         <titol>RESCUE AT PROXIMA CENTAURI</titol>
@@ -13,5 +17,9 @@
         <config>SETTINGS</config>
         <boss>PLAY BOSS</boss>
         <tornar>BACK</tornar>
+        <nova>NEW GAME</nova>
+        <carregar>LOAD GAME</carregar>
+        <seguir>RESUME GAME</seguir>
+        <guardar>SAVE &amp; EXIT</guardar>
     </eng>
 </idiomes>
