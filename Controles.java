@@ -22,25 +22,16 @@ public class Controles {
     cp5.addButton("btnNovaPartida")
       .setPosition(app.width/2 - 100, app.height/2 - 50)
       .setSize(200, 45)
-      .setColorBackground(app.color(15, 25, 45))
-      .setColorForeground(app.color(0, 180, 100))
-      .setColorActive(app.color(0, 255, 128))
       .plugTo(app, "iniciarJoc");
 
     cp5.addButton("btnCarregarPartida")
       .setPosition(app.width/2 - 100, app.height/2 + 5)
       .setSize(200, 45)
-      .setColorBackground(app.color(15, 25, 45))
-      .setColorForeground(app.color(0, 180, 100))
-      .setColorActive(app.color(0, 255, 128))
       .plugTo(app, "carregarPartida");
 
     cp5.addButton("btnConfig")
       .setPosition(app.width/2 - 100, app.height/2 + 60)
       .setSize(200, 45)
-      .setColorBackground(app.color(15, 25, 45))
-      .setColorForeground(app.color(0, 180, 100))
-      .setColorActive(app.color(0, 255, 128))
       .plugTo(app, "obrirConfiguracio");
 
     // Selector de llenguatge en format ScrollableList (desplegable)
@@ -52,9 +43,6 @@ public class Controles {
       .addItem("VALENCIÀ", 0)
       .addItem("ENGLISH", 1)
       .addItem("CASTELLANO", 2)
-      .setColorBackground(app.color(15, 25, 45))
-      .setColorForeground(app.color(0, 180, 100))
-      .setColorActive(app.color(0, 255, 128))
       .close();
       
     listIdioma.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
@@ -165,14 +153,14 @@ public class Controles {
           File f = new File(app.dataPath("partida.json"));
           if (f.exists()) {
             btnCarregar.setLock(false)
-                       .setColorBackground(app.color(15, 25, 45))
-                       .setColorForeground(app.color(0, 180, 100))
-                       .setColorActive(app.color(0, 255, 128));
+                       .setColorBackground(app.color(0, 45, 90))
+                       .setColorForeground(app.color(0, 116, 217))
+                       .setColorActive(app.color(0, 160, 240));
           } else {
             btnCarregar.setLock(true)
-                       .setColorBackground(app.color(30, 35, 45))
-                       .setColorForeground(app.color(30, 35, 45))
-                       .setColorActive(app.color(30, 35, 45));
+                       .setColorBackground(app.color(80, 80, 80))
+                       .setColorForeground(app.color(80, 80, 80))
+                       .setColorActive(app.color(80, 80, 80));
           }
         }
       }
