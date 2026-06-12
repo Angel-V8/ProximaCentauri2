@@ -53,6 +53,38 @@ public class Dispar {
     }
   }
 
+  // NOU: Constructor amb velocitat i desviació customitzades per a atacs especials de caps
+  public Dispar(PVector origen, PVector objectiu, float velocitat, float desviacio, boolean esEnemic) {
+    this.posicio = origen.copy();
+    this.esEnemic = esEnemic;
+    this.tamany = 8;
+
+    if (esEnemic) {
+      float targetY = objectiu.y + (float)(Math.random() * (desviacio * 2)) - desviacio;
+      float dx = objectiu.x - origen.x;
+      float dy = targetY - origen.y;
+      float dLen = (float)Math.sqrt(dx*dx + dy*dy);
+      if (dLen > 0) {
+        dx /= dLen;
+        dy /= dLen;
+      }
+      this.velocitatX = dx * velocitat;
+      this.velocitatY = dy * velocitat;
+    } else {
+      this.velocitatX = 15;
+      this.velocitatY = 0;
+    }
+  }
+
+  // NOU: Constructor amb vectors de velocitat explícits (per a ventalls, ràdials, etc.)
+  public Dispar(PVector origen, float velX, float velY, boolean esEnemic) {
+    this.posicio = origen.copy();
+    this.esEnemic = esEnemic;
+    this.tamany = 8;
+    this.velocitatX = velX;
+    this.velocitatY = velY;
+  }
+
   public void actualitzar() {
     this.posicio.x += this.velocitatX;
     this.posicio.y += this.velocitatY; // NOU: Apliquem el desvio

@@ -40,7 +40,7 @@ public class Controles {
       .setSize(200, 180)
       .setBarHeight(45)
       .setItemHeight(45)
-      .addItem("VALENCIÀ", 0)
+      .addItem("VALENCIA", 0)
       .addItem("ENGLISH", 1)
       .addItem("CASTELLANO", 2)
       .close();
@@ -213,7 +213,7 @@ public class Controles {
       ScrollableList list = (ScrollableList) cp5.get("desplegableIdioma");
       if (list != null) {
         if (app.idiomaActual.equals("cat")) {
-          list.getCaptionLabel().set("VALENCIÀ");
+          list.getCaptionLabel().set("VALENCIA");
         } else if (app.idiomaActual.equals("eng")) {
           list.getCaptionLabel().set("ENGLISH");
         } else if (app.idiomaActual.equals("esp")) {

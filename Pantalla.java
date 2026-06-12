@@ -115,6 +115,37 @@ public class Pantalla {
     String currentIdioma = ((RescatProxima)app).idiomaActual;
     String prefix = currentIdioma.equals("cat") ? "Nivell " : (currentIdioma.equals("esp") ? "Nivel " : "Level ");
     app.text(prefix + this.idNivell + " - " + this.titol, 10, 75); // Baixem l'alçada a 75 perquè no xafe el HUD
+    
+    // Dibuixem l'objectiu del nivell a sota
+    app.textSize(13);
+    app.fill(200, 200, 255); // Color gris-blavós clar molt elegant
+    String objText = "";
+    if (this.idNivell == 10) {
+      if (currentIdioma.equals("cat")) {
+        objText = "Objectiu: Derrotar el Guardià";
+      } else if (currentIdioma.equals("esp")) {
+        objText = "Objetivo: Derrotar al Guardián";
+      } else {
+        objText = "Objective: Defeat the Guardian";
+      }
+    } else if (this.duradaSegons > 0) {
+      if (currentIdioma.equals("cat")) {
+        objText = "Objectiu: Aguantar " + this.duradaSegons + " segons";
+      } else if (currentIdioma.equals("esp")) {
+        objText = "Objetivo: Sobrevivir " + this.duradaSegons + " segundos";
+      } else {
+        objText = "Objective: Survive for " + this.duradaSegons + " seconds";
+      }
+    } else {
+      if (currentIdioma.equals("cat")) {
+        objText = "Objectiu: Arribar a " + this.objectiuPunts + " punts";
+      } else if (currentIdioma.equals("esp")) {
+        objText = "Objetivo: Llegar a " + this.objectiuPunts + " puntos";
+      } else {
+        objText = "Objective: Reach " + this.objectiuPunts + " points";
+      }
+    }
+    app.text(objText, 10, 95);
   }
 
   // Comprova si el jugador ja ha arribat als punts necessaris per guanyar

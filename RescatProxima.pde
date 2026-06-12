@@ -116,6 +116,21 @@ void draw() {
       textAlign(CENTER, CENTER);
       textSize(60);
       text(textTitol, width/2, height/3 - 50);
+      
+      // Rècord de puntuació
+      fill(255, 255, 0); // Groc
+      textSize(20);
+      textAlign(CENTER, CENTER);
+      int record = configJSON.getInt("recordPunts", 0);
+      String txtRecord = "";
+      if (idiomaActual.equals("cat")) {
+        txtRecord = "RÈCORD: " + record;
+      } else if (idiomaActual.equals("esp")) {
+        txtRecord = "RÉCORD: " + record;
+      } else {
+        txtRecord = "HIGH SCORE: " + record;
+      }
+      text(txtRecord, width/2, height/2 - 100);
     }
   } else if (estatJoc == 0) {
     if (enPausa) {
@@ -380,6 +395,7 @@ void draw() {
       if (boss.haAcabatExplosio()) {
         estatJoc = 3;
         tempsTransicio = millis();
+        comprovarRecord();
       }
     }
 
@@ -451,6 +467,7 @@ void draw() {
     // ==========================================
     if (jugador.getVida() <= 0) {
       estatJoc = 2; // Passem a la pantalla de Game Over
+      comprovarRecord();
     }
   } else if (estatJoc == 1) {
     // ==========================================
@@ -778,6 +795,9 @@ void carregarConfiguracio() {
   if (!configJSON.hasKey("mostrarFPS")) {
     configJSON.setBoolean("mostrarFPS", false);
   }
+  if (!configJSON.hasKey("recordPunts")) {
+    configJSON.setInt("recordPunts", 0);
+  }
 }
 
 public void canviarDificultat(boolean value) {
@@ -857,6 +877,17 @@ void incrementarPunts(int valor) {
     marcador.incrementScore((int)(valor * 1.5f));
   } else {
     marcador.incrementScore(valor);
+  }
+}
+
+void comprovarRecord() {
+  if (configJSON != null) {
+    int puntuacioActual = marcador.getScore();
+    int recordActual = configJSON.getInt("recordPunts", 0);
+    if (puntuacioActual > recordActual) {
+      configJSON.setInt("recordPunts", puntuacioActual);
+      saveJSONObject(configJSON, "data/config.json");
+    }
   }
 }
 

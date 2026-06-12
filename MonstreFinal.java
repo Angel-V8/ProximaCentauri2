@@ -77,10 +77,10 @@ public class MonstreFinal {
     this.esDificil = esDificil;
     if (esDificil) {
       this.vida = 1600 + (nivell - 10) * 400; // Dificil: 1600 HP base
-      this.cooldownDispar = 60; // Cooldown d'atac de 1.0s (60 frames)
+      this.cooldownDispar = 32; // Cooldown d'atac de ~0.53s (32 frames)
     } else {
       this.vida = 800 + (nivell - 10) * 200;  // Normal: 800 HP base
-      this.cooldownDispar = 90; // Cooldown d'atac de 1.5s (90 frames)
+      this.cooldownDispar = 50; // Cooldown d'atac de ~0.83s (50 frames)
     }
     this.vidaMaxima = this.vida;
   }
@@ -279,26 +279,27 @@ public class MonstreFinal {
     // Només ataca si ja s'ha col·locat en posició de combat
     if (this.posicio.x <= 620) {
       
-      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 55 per poder esquivar-lo al final)
+      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 65 per poder esquivar-lo al final)
       if (this.cargantKamehameha) {
-        if (this.temporizadorKamehameha < 55) {
-          this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.15f); // Seguiment molt més ràpid i agressiu
+        if (this.temporizadorKamehameha < 65) {
+          this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.28f); // Seguiment molt més ràpid i agressiu
         }
         return nousDispars;
       }
 
-      // Si ja està disparant el feix massiu, no fa altres accions
+      // Si ja està disparant el feix massiu, no fa altres accions, pero el laser segueix lentament al jugador
       if (this.disparantKamehameha) {
+        this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.05f); // Es mou un poc cap al jugador durant el dispar!
         return nousDispars;
       }
 
       // PATRÓ 1: Ràfega activa de Ki Blasts
       if (this.rafagaRestant > 0) {
         this.temporizadorRafaga++;
-        if (this.temporizadorRafaga >= 8) {
+        if (this.temporizadorRafaga >= 5) {
           this.temporizadorRafaga = 0;
           this.rafagaRestant--;
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), posicioJugador, true));
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), posicioJugador, 8.5f, 10.0f, true));
         }
         return nousDispars;
       }
@@ -311,30 +312,30 @@ public class MonstreFinal {
         int tipusAtac = (int)(Math.random() * 5);
 
         if (tipusAtac == 0) {
-          // ATAC 0: Ventall triple
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), true));
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y - 20), new PVector(0, this.posicio.y - 120), true));
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y + 20), new PVector(0, this.posicio.y + 120), true));
+          // ATAC 0: Ventall triple ràpid
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), -9.0f, 0, true));
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y - 20), -9.0f, -2.5f, true));
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y + 20), -9.0f, 2.5f, true));
         } 
         else if (tipusAtac == 1) {
-          // ATAC 1: Doble blast dirigit
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y - 25), posicioJugador, true));
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y + 25), posicioJugador, true));
+          // ATAC 1: Doble blast dirigit ràpid i precís
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y - 25), posicioJugador, 8.5f, 8.0f, true));
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y + 25), posicioJugador, 8.5f, 8.0f, true));
         } 
         else if (tipusAtac == 2) {
           // ATAC 2: Ràfega seqüencial
           this.rafagaRestant = 5;
           this.temporizadorRafaga = 0;
-          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), posicioJugador, true));
+          nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), posicioJugador, 8.5f, 10.0f, true));
         } 
         else if (tipusAtac == 3) {
-          // ATAC 3: Ona Radial 360º
-          float anglePas = (float)(Math.PI * 2) / 6.0f;
-          for (int i = 0; i < 6; i++) {
+          // ATAC 3: Ona Radial 360º de 10 ràpids blasts
+          float anglePas = (float)(Math.PI * 2) / 10.0f;
+          for (int i = 0; i < 10; i++) {
             float angle = i * anglePas;
-            float targetX = this.posicio.x - 50 + (float)Math.cos(angle) * 200.0f;
-            float targetY = this.posicio.y + (float)Math.sin(angle) * 200.0f;
-            nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), new PVector(targetX, targetY), true));
+            float vx = (float)Math.cos(angle) * 7.5f;
+            float vy = (float)Math.sin(angle) * 7.5f;
+            nousDispars.add(new Dispar(new PVector(this.posicio.x - 50, this.posicio.y), vx, vy, true));
           }
         }
         else {
