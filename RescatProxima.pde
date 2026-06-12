@@ -121,7 +121,7 @@ void draw() {
       fill(255, 255, 0); // Groc
       textSize(20);
       textAlign(CENTER, CENTER);
-      int record = configJSON.getInt("recordPunts", 0);
+      int record = configJSON.getInt("recordPunts");
       String txtRecord = "";
       if (idiomaActual.equals("cat")) {
         txtRecord = "RÈCORD: " + record;
@@ -883,7 +883,7 @@ void incrementarPunts(int valor) {
 void comprovarRecord() {
   if (configJSON != null) {
     int puntuacioActual = marcador.getScore();
-    int recordActual = configJSON.getInt("recordPunts", 0);
+    int recordActual = configJSON.getInt("recordPunts");
     if (puntuacioActual > recordActual) {
       configJSON.setInt("recordPunts", puntuacioActual);
       saveJSONObject(configJSON, "data/config.json");
