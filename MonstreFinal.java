@@ -35,6 +35,8 @@ public class MonstreFinal {
   private Animation animacio;
   private PVector posicioZero; // PVector(0,0) per a renderitzar amb translat/scale in-place
 
+  private boolean esDificil = true; // NOU: Control de dificultat del boss
+
   // CONSTRUCTORS
 
   // Constructor per defecte
@@ -64,10 +66,22 @@ public class MonstreFinal {
     this.posicioZero = new PVector(0, 0);
   }
 
-  // Constructor parametritzat
+  // Constructor parametritzat (motius de compatibilitat: esDificil = true per defecte)
   public MonstreFinal(int nivell) {
+    this(nivell, true);
+  }
+
+  // NOU: Constructor parametritzat que rep la dificultat per a escalar estadístiques
+  public MonstreFinal(int nivell, boolean esDificil) {
     this();
-    this.vida = 1600 + (nivell - 10) * 400; // Salut doblada per a qualsevol nivell
+    this.esDificil = esDificil;
+    if (esDificil) {
+      this.vida = 1600 + (nivell - 10) * 400; // Dificil: 1600 HP base
+      this.cooldownDispar = 60; // Cooldown d'atac de 1.0s (60 frames)
+    } else {
+      this.vida = 800 + (nivell - 10) * 200;  // Normal: 800 HP base
+      this.cooldownDispar = 90; // Cooldown d'atac de 1.5s (90 frames)
+    }
     this.vidaMaxima = this.vida;
   }
 

@@ -80,8 +80,8 @@ void setup() {
   // --- CONTROLS DE CONFIGURACIÓ IN-GAME (Ocults per defecte) ---
   cp5.addSlider("sliderVida")
     .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 120)
-    .setSize(200, 30)
+    .setPosition(width/2 - 50, height/2 - 135)
+    .setSize(200, 25)
     .setRange(10, 200)
     .setValue(configJSON.getInt("vida"))
     .setColorActive(color(0, 255, 128))
@@ -90,28 +90,48 @@ void setup() {
 
   cp5.addSlider("sliderVelocitat")
     .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 70)
-    .setSize(200, 30)
+    .setPosition(width/2 - 50, height/2 - 90)
+    .setSize(200, 25)
     .setRange(1, 15)
     .setValue(configJSON.getInt("velocitat"))
     .setColorActive(color(0, 255, 128))
     .setColorForeground(color(0, 200, 100))
     .setColorBackground(color(40, 40, 60));
 
-  cp5.addSlider("sliderEscut")
+  cp5.addToggle("toggleEscut")
     .setLabel("")
-    .setPosition(width/2 - 50, height/2 - 20)
-    .setSize(200, 30)
-    .setRange(0, 5)
-    .setValue(configJSON.getInt("escut"))
+    .setPosition(width/2 - 50, height/2 - 45)
+    .setSize(60, 25)
+    .setMode(ControlP5.SWITCH)
+    .setState(configJSON.getInt("escut") > 0)
     .setColorActive(color(0, 255, 128))
     .setColorForeground(color(0, 200, 100))
     .setColorBackground(color(40, 40, 60));
 
+  cp5.addToggle("toggleDobleDispar")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2)
+    .setSize(60, 25)
+    .setMode(ControlP5.SWITCH)
+    .setState(configJSON.getBoolean("dobleDispar"))
+    .setColorActive(color(0, 255, 128))
+    .setColorForeground(color(0, 200, 100))
+    .setColorBackground(color(40, 40, 60));
+
+  cp5.addToggle("toggleDificultat")
+    .setLabel("")
+    .setPosition(width/2 - 50, height/2 + 45)
+    .setSize(60, 25)
+    .setMode(ControlP5.SWITCH)
+    .setState(configJSON.getInt("dificultat") == 1)
+    .setColorActive(color(255, 50, 80))
+    .setColorForeground(color(180, 30, 50))
+    .setColorBackground(color(40, 40, 60));
+
   cp5.addButton("btnBoss")
     .setLabel("JUGAR BOSS")
-    .setPosition(width/2 - 100, height/2 + 50)
-    .setSize(200, 45)
+    .setPosition(width/2 - 220, height/2 + 110)
+    .setSize(210, 45)
     .setColorBackground(color(200, 30, 80))
     .setColorForeground(color(255, 50, 120))
     .setColorActive(color(255, 100, 150))
@@ -119,8 +139,8 @@ void setup() {
 
   cp5.addButton("btnTornar")
     .setLabel("TORNAR")
-    .setPosition(width/2 - 100, height/2 + 115)
-    .setSize(200, 45)
+    .setPosition(width/2 + 10, height/2 + 110)
+    .setSize(210, 45)
     .setColorBackground(color(30, 80, 200))
     .setColorForeground(color(50, 120, 255))
     .setColorActive(color(100, 150, 255))
@@ -146,22 +166,43 @@ void draw() {
       // Panel de fons translúcid per al menú de configuració
       fill(10, 15, 30, 220); // Blavós fosc transparent molt premium
       rectMode(CENTER);
-      rect(width/2, height/2, 500, 440, 20); // Caixa del menú de configuració
+      rect(width/2, height/2, 540, 460, 20); // Caixa del menú de configuració
       
       // Títol
       fill(0, 255, 128); // Verd neó
       textAlign(CENTER, CENTER);
       textSize(36);
-      text(idiomaActual.equals("cat") ? "CONFIGURACIÓ" : "SETTINGS", width/2, height/2 - 170);
+      text(idiomaActual.equals("cat") ? "CONFIGURACIÓ" : "SETTINGS", width/2, height/2 - 180);
       
-      // Etiquetes dels sliders
+      // Etiquetes dels controls
       fill(255);
       textSize(15);
       textAlign(RIGHT, CENTER);
-      float labelX = width/2 - 70; // 330 (20px a l'esquerra del slider)
-      text(idiomaActual.equals("cat") ? "VIDA:" : "HEALTH:", labelX, height/2 - 105);
-      text(idiomaActual.equals("cat") ? "VELOCITAT:" : "SPEED:", labelX, height/2 - 55);
-      text(idiomaActual.equals("cat") ? "ESCUT:" : "SHIELD:", labelX, height/2 - 5);
+      float labelX = width/2 - 70; // 330 (20px a l'esquerra del control)
+      text(idiomaActual.equals("cat") ? "VIDA:" : "HEALTH:", labelX, height/2 - 122.5f);
+      text(idiomaActual.equals("cat") ? "VELOCITAT:" : "SPEED:", labelX, height/2 - 77.5f);
+      text(idiomaActual.equals("cat") ? "ESCUT INICIAL:" : "INITIAL SHIELD:", labelX, height/2 - 32.5f);
+      text(idiomaActual.equals("cat") ? "DOBLE DISPAR:" : "DOUBLE SHOT:", labelX, height/2 + 12.5f);
+      text(idiomaActual.equals("cat") ? "DIFICULTAT:" : "DIFFICULTY:", labelX, height/2 + 57.5f);
+
+      // Estat dels toggles escrit a mà
+      textAlign(LEFT, CENTER);
+      textSize(14);
+      
+      // Escut
+      boolean escutActiu = cp5.get(Toggle.class, "toggleEscut").getState();
+      fill(escutActiu ? color(0, 255, 128) : color(150));
+      text(escutActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 - 32.5f);
+      
+      // Doble Dispar
+      boolean dobleActiu = cp5.get(Toggle.class, "toggleDobleDispar").getState();
+      fill(dobleActiu ? color(0, 255, 128) : color(150));
+      text(dobleActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 + 12.5f);
+      
+      // Dificultat
+      boolean difDificil = cp5.get(Toggle.class, "toggleDificultat").getState();
+      fill(difDificil ? color(255, 50, 80) : color(0, 220, 255));
+      text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : "HARD") : (idiomaActual.equals("cat") ? "NORMAL" : "NORMAL"), width/2 + 30, height/2 + 57.5f);
     } else {
       // Títol del joc normal
       fill(0, 255, 0);
@@ -363,7 +404,8 @@ void draw() {
         if (jugador.getPosicio().x - jugador.getTamany()/2.0f <= limitX) {
           float radiCollisioY = jugador.getTamany()/2.0f + 48.0f; // Amplada del feix + radi de la nau
           if (Math.abs(jugador.getPosicio().y - boss.getKamehamehaY()) < radiCollisioY) {
-            jugador.rebreDany(2); // Dany continu per frame (2 HP = desintegració en 50 frames ~ 0.8s)
+            int danyLaser = (configJSON.getInt("dificultat") == 1) ? 2 : 1;
+            jugador.rebreDany(danyLaser); // Dany continu per frame (Dificil = 2, Normal = 1)
           }
         }
       }
@@ -534,7 +576,12 @@ void draw() {
 void generarEnemics() {
   if (framesIntervalSpawn <= 0) return;
 
-  if (contadorFramesNivell > 0 && contadorFramesNivell % framesIntervalSpawn == 0) {
+  int interval = framesIntervalSpawn;
+  if (configJSON.getInt("dificultat") == 0) {
+    interval = (int)(framesIntervalSpawn * 1.5f); // Normal: enemics triguen 1.5x en aparèixer
+  }
+
+  if (contadorFramesNivell > 0 && contadorFramesNivell % interval == 0) {
     int atzar = (int)random(0, 3);
 
     // Ajustem la IA/Probabilitat segons el nivell i la narrativa
@@ -562,11 +609,16 @@ void generarBoosters() {
 }
 
 void generarMeteorits() {
-  if (framesIntervalMeteorits > 0 && contadorFramesNivell % framesIntervalMeteorits == 0) {
-    // NOU: Meteorits de diferents tamanys i danys configurats dinàmicament
-    int tamanyAleatori = (int)random(20, 65); // Mida aleatòria
-    int danyAleatori = tamanyAleatori / 2;    // El dany és proporcional a la mida
-    llistaMeteorits.add(new Meteorit(tamanyAleatori, danyAleatori));
+  if (framesIntervalMeteorits > 0) {
+    int interval = framesIntervalMeteorits;
+    if (configJSON.getInt("dificultat") == 0) {
+      interval = (int)(framesIntervalMeteorits * 1.5f); // Normal: meteorits triguen 1.5x en aparèixer
+    }
+    if (contadorFramesNivell % interval == 0) {
+      int tamanyAleatori = (int)random(20, 65); // Mida aleatòria
+      int danyAleatori = tamanyAleatori / 2;    // El dany és proporcional a la mida
+      llistaMeteorits.add(new Meteorit(tamanyAleatori, danyAleatori));
+    }
   }
 }
 
@@ -638,7 +690,7 @@ void carregarNivell(int num) {
     // NIVELL 10: El Monstre Final (Jefe de Proxima Centauri)
     // Utilitzem el fons del nivell 9 amb un objectiu molt gran que requereix matar el boss
     nivellActual = new Pantalla(this, 10, "El Guardià de Pròxima Centauri", "./img/lvl9.png", 99999, 0, 0, 0);
-    boss = new MonstreFinal(10);
+    boss = new MonstreFinal(10, configJSON.getInt("dificultat") == 1);
   } else {
     println("PREPARAT PEL BOSS!");
     exit();
@@ -659,7 +711,17 @@ public void iniciarJoc() {
   carregarConfiguracio();
   jugador.resetJugador();
   marcador.resetScore();
-  jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
+  
+  int vida = configJSON.getInt("vida");
+  int vel = configJSON.getInt("velocitat");
+  int escut = configJSON.getInt("escut");
+  boolean dobleDispar = configJSON.getBoolean("dobleDispar");
+  
+  jugador.aplicarConfiguracio(vida, vel, escut);
+  if (dobleDispar) {
+    jugador.activarDobleDispar(999999);
+  }
+  
   estatJoc = 0;
   numeroNivell = 1; // Comença des del nivell 1
   carregarNivell(numeroNivell);
@@ -671,7 +733,17 @@ public void iniciarBoss() {
   carregarConfiguracio();
   jugador.resetJugador();
   marcador.resetScore();
-  jugador.aplicarConfiguracio(configJSON.getInt("vida"), configJSON.getInt("velocitat"), configJSON.getInt("escut"));
+  
+  int vida = configJSON.getInt("vida");
+  int vel = configJSON.getInt("velocitat");
+  int escut = configJSON.getInt("escut");
+  boolean dobleDispar = configJSON.getBoolean("dobleDispar");
+  
+  jugador.aplicarConfiguracio(vida, vel, escut);
+  if (dobleDispar) {
+    jugador.activarDobleDispar(999999);
+  }
+  
   estatJoc = 0;
   numeroNivell = 10; // Comença directament al nivell del boss
   carregarNivell(numeroNivell);
@@ -679,27 +751,43 @@ public void iniciarBoss() {
 
 void carregarConfiguracio() {
   configJSON = loadJSONObject("data/config.json");
+  // Assegurem que existeixen els nous camps amb valors per defecte coherents
+  if (!configJSON.hasKey("dificultat")) {
+    configJSON.setInt("dificultat", 0); // 0 = Normal, 1 = Dificil
+  }
+  if (!configJSON.hasKey("dobleDispar")) {
+    configJSON.setBoolean("dobleDispar", false);
+  }
 }
 
-// Guarda els sliders a config.json i els aplica a la nau
+// Guarda els sliders i toggles a config.json i els aplica a la nau
 public void desarConfiguracio() {
   if (configJSON == null) {
     configJSON = new JSONObject();
   }
   
-  // Obtenim valors dels sliders de cp5
+  // Obtenim valors de cp5
   int vida = (int)cp5.get(Slider.class, "sliderVida").getValue();
   int velocitat = (int)cp5.get(Slider.class, "sliderVelocitat").getValue();
-  int escut = (int)cp5.get(Slider.class, "sliderEscut").getValue();
+  int escut = cp5.get(Toggle.class, "toggleEscut").getState() ? 1 : 0;
+  boolean dobleDispar = cp5.get(Toggle.class, "toggleDobleDispar").getState();
+  int dificultat = cp5.get(Toggle.class, "toggleDificultat").getState() ? 1 : 0;
   
   configJSON.setInt("vida", vida);
   configJSON.setInt("velocitat", velocitat);
   configJSON.setInt("escut", escut);
+  configJSON.setBoolean("dobleDispar", dobleDispar);
+  configJSON.setInt("dificultat", dificultat);
   
   saveJSONObject(configJSON, "data/config.json");
   
   // Apliquem configuració al jugador a l'instant
   jugador.aplicarConfiguracio(vida, velocitat, escut);
+  if (dobleDispar) {
+    jugador.activarDobleDispar(999999); // Doble dispar actiu
+  } else {
+    jugador.activarDobleDispar(0);
+  }
 }
 
 public void obrirConfiguracio() {
@@ -708,7 +796,7 @@ public void obrirConfiguracio() {
 }
 
 public void tornarAlMenu() {
-  desarConfiguracio(); // Desar canvis fets en els sliders
+  desarConfiguracio(); // Desar canvis fets
   enConfiguracio = false;
   actualitzarVisibilitatMenus();
 }
@@ -724,7 +812,9 @@ public void actualitzarVisibilitatMenus() {
       // Mostrar Config
       cp5.get("sliderVida").show();
       cp5.get("sliderVelocitat").show();
-      cp5.get("sliderEscut").show();
+      cp5.get("toggleEscut").show();
+      cp5.get("toggleDobleDispar").show();
+      cp5.get("toggleDificultat").show();
       cp5.get("btnBoss").show();
       cp5.get("btnTornar").show();
     } else {
@@ -736,7 +826,9 @@ public void actualitzarVisibilitatMenus() {
       // Ocultar Config
       cp5.get("sliderVida").hide();
       cp5.get("sliderVelocitat").hide();
-      cp5.get("sliderEscut").hide();
+      cp5.get("toggleEscut").hide();
+      cp5.get("toggleDobleDispar").hide();
+      cp5.get("toggleDificultat").hide();
       cp5.get("btnBoss").hide();
       cp5.get("btnTornar").hide();
     }
