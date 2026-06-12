@@ -171,8 +171,8 @@ public class MonstreFinal {
       app.rectMode(PApplet.CORNERS);
       app.noStroke();
       
-      // Si falten menys de 15 frames, ja està blocat: parpelleja agressivament en vermell/taronja brillant
-      boolean blocat = (this.temporizadorKamehameha >= 55);
+      // Si està bloquejat (a partir del frame 50), parpelleja agressivament en vermell/taronja brillant
+      boolean blocat = (this.temporizadorKamehameha >= 50);
       if (blocat) {
         float warningAlpha = 40 + (app.frameCount % 5) * 25; // Parpelleig molt ràpid i intens
         app.fill(255, 50, 0, warningAlpha);
@@ -279,17 +279,17 @@ public class MonstreFinal {
     // Només ataca si ja s'ha col·locat en posició de combat
     if (this.posicio.x <= 620) {
       
-      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 65 per poder esquivar-lo al final)
+      // Si està carregant, orienta la Y del làser cap a la Y actual del jugador (fins al frame 50 per poder esquivar-lo con aviso previo estilo Undertale)
       if (this.cargantKamehameha) {
-        if (this.temporizadorKamehameha < 65) {
+        if (this.temporizadorKamehameha < 50) {
           this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.28f); // Seguiment molt més ràpid i agressiu
         }
         return nousDispars;
       }
 
-      // Si ja està disparant el feix massiu, no fa altres accions, pero el laser segueix lentament al jugador
+      // Si ja està disparant el feix massiu, no fa altres accions, pero el laser segueix molt lentament al jugador
       if (this.disparantKamehameha) {
-        this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.05f); // Es mou un poc cap al jugador durant el dispar!
+        this.kamehamehaY = lerp(this.kamehamehaY, posicioJugador.y, 0.015f); // Es mou molt poc a poc cap al jugador durant el dispar!
         return nousDispars;
       }
 

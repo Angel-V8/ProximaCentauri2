@@ -383,7 +383,7 @@ void draw() {
       if (boss.isDisparantKamehameha()) {
         float limitX = boss.getPosicio().x - 40;
         if (jugador.getPosicio().x - jugador.getTamany()/2.0f <= limitX) {
-          float radiCollisioY = jugador.getTamany()/2.0f + 48.0f; // Amplada del feix + radi de la nau
+          float radiCollisioY = jugador.getTamany()/4.0f + 18.0f; // Hitbox ultra precisa estil Undertale!
           if (Math.abs(jugador.getPosicio().y - boss.getKamehamehaY()) < radiCollisioY) {
             int danyLaser = (configJSON.getInt("dificultat") == 1) ? 2 : 1;
             jugador.rebreDany(danyLaser); // Dany continu per frame (Dificil = 2, Normal = 1)
