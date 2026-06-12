@@ -18,11 +18,12 @@ public class Mina {
   private Animation animacioExplosio; // Animació de l'explosió de la mina
   private int vidaMaxima; // NOU: Registrar la vida màxima per a la barra de vida
   private PVector posicioJugador; // Referència a la posició del jugador per a l'atracció magnètica
+  private java.util.ArrayList<Object> elementsDanyats; // Llista per evitar danyar múltiples vegades la mateixa entitat
 
   // METODES
   public void actualitzar() {
     if (explotant) {
-      radiExplosio += 10; // NOU: L'ona expansiva creix el doble de ràpid (abans 5)
+      radiExplosio += 5; // Ona expansiva creix a un ritme moderat i equilibrat (abans 10)
       if (this.animacioExplosio != null) {
         this.animacioExplosio.update();
       }
@@ -66,8 +67,9 @@ public class Mina {
         this.animacioExplosio.setLoop(false);
         this.animacioExplosio.setDelay(2);
       }
-      // NOU: Dibuixem l'explosió el doble de gran per a coincidir amb el seu gran radi expansiu (escala /16.0f en comptes de /32.0f)
-      this.animacioExplosio.display(this.posicio, 1, (float)this.tamany / 16.0f);
+      // Dibuixem l'explosió creixent dinàmicament per a coincidir exactament amb el radi expansiu de la col·lisió
+      float escalaExplosio = (float)(this.radiExplosio * 2) / 64.0f;
+      this.animacioExplosio.display(this.posicio, 1, escalaExplosio);
     } else {
       if (this.animacio == null) {
         // Spritesheet de 1024x1024 en quadrícula 2x2 -> 4 frames de 512x512
@@ -107,6 +109,7 @@ public class Mina {
     this.explotant = false;
     this.radiExplosio = this.tamany;
     this.haDanyatJugador = false;
+    this.elementsDanyats = new java.util.ArrayList<Object>();
   }
 
   // Constructor parametritzat
@@ -148,4 +151,13 @@ public class Mina {
   public boolean haDanyatJugador() { return this.haDanyatJugador; }
 
   public void setHaDanyatJugador(boolean b) { this.haDanyatJugador = b; }
+
+  // Métodes per evitar danyar múltiples vegades la mateixa entitat
+  public boolean haDanyat(Object obj) {
+    return this.elementsDanyats.contains(obj);
+  }
+
+  public void afegirDanyat(Object obj) {
+    this.elementsDanyats.add(obj);
+  }
 }
