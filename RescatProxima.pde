@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import controlP5.*;
 
 JSONObject configJSON;
-GestorUI gestorUI;
+Controles controles;
 
 // Variables Globals
 PImage fonsInici;
@@ -53,7 +53,7 @@ void setup() {
   carregarConfiguracio();
 
   // CONFIGURACIÓ DEL MENÚ I CONTROLS CP5
-  gestorUI = new GestorUI(this);
+  controles = new Controles(this);
 
   // Ajustem la visibilitat inicial dels dos menús
   enConfiguracio = false;
@@ -97,17 +97,17 @@ void draw() {
       textSize(14);
       
       // Dificultat
-      boolean difDificil = gestorUI.getCP5().get(Toggle.class, "toggleDificultat").getState();
+      boolean difDificil = controles.getCP5().get(Toggle.class, "toggleDificultat").getState();
       fill(difDificil ? color(255, 50, 80) : color(0, 220, 255));
       text(difDificil ? (idiomaActual.equals("cat") ? "DIFÍCIL" : "HARD") : (idiomaActual.equals("cat") ? "NORMAL" : "NORMAL"), width/2 + 30, height/2 - 77.5f);
       
       // Parallax
-      boolean parallaxDesactivat = gestorUI.getCP5().get(Toggle.class, "toggleParallax").getState();
+      boolean parallaxDesactivat = controles.getCP5().get(Toggle.class, "toggleParallax").getState();
       fill(parallaxDesactivat ? color(255, 50, 80) : color(0, 255, 128));
       text(parallaxDesactivat ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 - 17.5f);
       
       // FPS
-      boolean fpsActiu = gestorUI.getCP5().get(Toggle.class, "toggleFPS").getState();
+      boolean fpsActiu = controles.getCP5().get(Toggle.class, "toggleFPS").getState();
       fill(fpsActiu ? color(0, 255, 128) : color(150));
       text(fpsActiu ? (idiomaActual.equals("cat") ? "SÍ" : "YES") : "NO", width/2 + 30, height/2 + 42.5f);
     } else {
@@ -622,7 +622,7 @@ void keyPressed() {
     enConfiguracio = false;
     enPausa = false;
     actualitzarVisibilitatMenus();
-    gestorUI.show();
+    controles.show();
 
     carregarConfiguracio();
     jugador.aplicarConfiguracio(100, 5, 0);
@@ -695,7 +695,7 @@ void carregarNivell(int num) {
 
 public void iniciarJoc() {
   enConfiguracio = false;
-  cp5.hide();
+  controles.hide();
   carregarConfiguracio();
   jugador.resetJugador();
   marcador.resetScore();
@@ -709,7 +709,7 @@ public void iniciarJoc() {
 
 public void iniciarBoss() {
   enConfiguracio = false;
-  cp5.hide();
+  controles.hide();
   carregarConfiguracio();
   jugador.resetJugador();
   marcador.resetScore();
@@ -735,7 +735,7 @@ public void carregarPartida() {
     int pts = saveJSON.getInt("punts");
     
     enPausa = false;
-    cp5.hide();
+    controles.hide();
     carregarConfiguracio();
     jugador.resetJugador();
     marcador.resetScore();
@@ -760,7 +760,7 @@ public void guardarIEixir() {
   guardarPartida();
   enPausa = false;
   estatJoc = -1;
-  gestorUI.show();
+  controles.show();
   actualitzarVisibilitatMenus();
 }
 
@@ -818,14 +818,14 @@ public void tornarAlMenu() {
 }
 
 public void actualitzarVisibilitatMenus() {
-  if (gestorUI != null) {
-    gestorUI.actualitzarVisibilitatMenus();
+  if (controles != null) {
+    controles.actualitzarVisibilitatMenus();
   }
 }
 
 void aplicarIdioma() {
-  if (gestorUI != null) {
-    gestorUI.aplicarIdioma();
+  if (controles != null) {
+    controles.aplicarIdioma();
   }
 }
 

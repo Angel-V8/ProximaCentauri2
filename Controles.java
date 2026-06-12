@@ -1,13 +1,13 @@
 import controlP5.*;
 import processing.core.PApplet;
-import processing.core.XML;
+import processing.data.XML;
 import java.io.File;
 
-public class GestorUI {
+public class Controles {
   private RescatProxima app;
   private ControlP5 cp5;
 
-  public GestorUI(RescatProxima app) {
+  public Controles(RescatProxima app) {
     this.app = app;
     this.cp5 = new ControlP5(app);
     setupControls();
