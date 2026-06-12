@@ -121,14 +121,14 @@ void draw() {
       fill(255, 255, 0); // Groc
       textSize(20);
       textAlign(CENTER, CENTER);
-      int record = configJSON.getInt("recordPunts");
+      int recordValor = configJSON.getInt("recordPunts");
       String txtRecord = "";
       if (idiomaActual.equals("cat")) {
-        txtRecord = "RÈCORD: " + record;
+        txtRecord = "RÈCORD: " + recordValor;
       } else if (idiomaActual.equals("esp")) {
-        txtRecord = "RÉCORD: " + record;
+        txtRecord = "RÉCORD: " + recordValor;
       } else {
-        txtRecord = "HIGH SCORE: " + record;
+        txtRecord = "HIGH SCORE: " + recordValor;
       }
       text(txtRecord, width/2, height/2 - 100);
     }
