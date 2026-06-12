@@ -114,7 +114,7 @@ void draw() {
       // Títol del joc normal
       fill(0, 255, 0);
       textAlign(CENTER, CENTER);
-      textSize(60);
+      textSize(42);
       text(textTitol, width/2, height/3 - 50);
 
       // Rècord de puntuació

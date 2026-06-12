@@ -111,11 +111,28 @@ public class NauPlayer implements Entitat {
     if (this.escut > 0) {
       app.pushStyle();
       app.noFill();
-      app.stroke(0, 200, 255, 180); // Blau elèctric
+      app.stroke(0, 200, 255, 180);
       app.strokeWeight(3);
       app.ellipse(this.posicio.x, this.posicio.y, this.tamany + 15, this.tamany + 15);
       app.popStyle();
     }
+
+    // Barra de vida sobre la nau
+    app.pushStyle();
+    app.rectMode(PApplet.CORNER);
+    app.noStroke();
+    app.fill(50, 50, 50, 160);
+    app.rect(this.posicio.x - 20, this.posicio.y - this.tamany/2 - 10, 40, 4, 2);
+    if (this.vida > 50) {
+      app.fill(0, 255, 128);
+    } else if (this.vida > 25) {
+      app.fill(255, 200, 0);
+    } else {
+      app.fill(255, 50, 50);
+    }
+    float ampleVida = PApplet.map(Math.max(0, this.vida), 0, 100, 0, 38);
+    app.rect(this.posicio.x - 19, this.posicio.y - this.tamany/2 - 9, ampleVida, 2, 1);
+    app.popStyle();
   }
 
   // Implementacio Destruible
